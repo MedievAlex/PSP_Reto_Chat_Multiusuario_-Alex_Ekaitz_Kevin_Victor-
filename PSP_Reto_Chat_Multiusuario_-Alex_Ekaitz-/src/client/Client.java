@@ -2,8 +2,10 @@ package client;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Client extends JFrame {
+public class Client extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private FlowLayout fl_panelSuperior;
 	private JPanel panelSuperior;
@@ -132,7 +134,9 @@ public class Client extends JFrame {
         getContentPane().add(panelInferior, BorderLayout.SOUTH);
     }
 	
-	public void start() {
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
 		
 	}
 }
