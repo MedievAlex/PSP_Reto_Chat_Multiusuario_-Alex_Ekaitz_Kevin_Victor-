@@ -75,11 +75,13 @@ public class Client extends JFrame implements ActionListener {
         btnConectar = new JButton("Conectar");
         btnConectar.setFont(new Font("Arial", Font.BOLD, 14));
         btnConectar.setPreferredSize(new Dimension(120, 30));
+        btnConectar.addActionListener(this);
         
         btnDesconectar = new JButton("Desconectar");
         btnDesconectar.setFont(new Font("Arial", Font.BOLD, 14));
         btnDesconectar.setPreferredSize(new Dimension(130, 30));
         btnDesconectar.setEnabled(false);
+        btnDesconectar.addActionListener(this);
         
         lblEstado = new JLabel("No conectado");
         lblEstado.setFont(new Font("Arial", Font.BOLD, 14));
@@ -111,12 +113,14 @@ public class Client extends JFrame implements ActionListener {
         
         chkPrivado = new JCheckBox("Privado");
         chkPrivado.setFont(new Font("Arial", Font.BOLD, 14));
+        chkPrivado.addActionListener(this);
         
         labelPara = new JLabel("Para:");
         labelPara.setFont(new Font("Arial", Font.BOLD, 14));
         
         clientes = new JComboBox<>();
         clientes.setPreferredSize(new Dimension(130, 22));
+        clientes.setEnabled(false);
         
         txtMensaje = new JTextField(45);
         txtMensaje.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -124,7 +128,8 @@ public class Client extends JFrame implements ActionListener {
         btnEnviar = new JButton("Enviar");
         btnEnviar.setFont(new Font("Arial", Font.BOLD, 14));
         btnEnviar.setEnabled(false);
-
+        btnEnviar.addActionListener(this);
+        
         panelInferior.add(chkPrivado);
         panelInferior.add(labelPara);
         panelInferior.add(clientes);
@@ -136,7 +141,22 @@ public class Client extends JFrame implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub	
+		if (e.getSource() == btnConectar) {
+			if (txtIp.getText().isEmpty() || txtPuerto.getText().isEmpty() || txtUsuario.getText().isEmpty()) {
+				JOptionPane.showMessageDialog(this, "Rellene los campos IP, Puerto y Usuario", "Atención", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+		} else if (e.getSource() == chkPrivado) {
+			if (chkPrivado.isSelected()) {
+				clientes.setEnabled(true);
+			} else {
+				clientes.setEnabled(false);
+			}
+		}
+	}
+	
+	public void llenarListaUsuarios() {
 		
 	}
 }
