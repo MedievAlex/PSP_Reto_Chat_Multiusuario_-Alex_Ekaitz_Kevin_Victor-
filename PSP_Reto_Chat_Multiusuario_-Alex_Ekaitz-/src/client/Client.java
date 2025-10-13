@@ -58,31 +58,31 @@ public class Client extends JFrame implements ActionListener {
         panelSuperior = new JPanel(fl_panelSuperior);
         
         labelIp = new JLabel("IP:");
-        labelIp.setFont(new Font("Open Sans", Font.BOLD, 14));
+        labelIp.setFont(new Font("Arial", Font.BOLD, 14));
         txtIp = new JTextField("127.0.0.1", 10);
-        txtIp.setFont(new Font("Open Sans", Font.PLAIN, 14));
+        txtIp.setFont(new Font("Arial", Font.PLAIN, 14));
 
         labelPuerto = new JLabel("Puerto:");
-        labelPuerto.setFont(new Font("Open Sans", Font.BOLD, 14));
-        txtPuerto = new JTextField("5000", 3);
-        txtPuerto.setFont(new Font("Open Sans", Font.PLAIN, 14));
+        labelPuerto.setFont(new Font("Arial", Font.BOLD, 14));
+        txtPuerto = new JTextField("1234", 4);
+        txtPuerto.setFont(new Font("Arial", Font.PLAIN, 14));
 
         labelUsuario = new JLabel("Usuario:");
-        labelUsuario.setFont(new Font("Open Sans", Font.BOLD, 14));
+        labelUsuario.setFont(new Font("Arial", Font.BOLD, 14));
         txtUsuario = new JTextField(8);
-        txtUsuario.setFont(new Font("Open Sans", Font.PLAIN, 14));
+        txtUsuario.setFont(new Font("Arial", Font.PLAIN, 14));
 
         btnConectar = new JButton("Conectar");
-        btnConectar.setFont(new Font("Open Sans", Font.BOLD, 14));
+        btnConectar.setFont(new Font("Arial", Font.BOLD, 14));
         btnConectar.setPreferredSize(new Dimension(120, 30));
         
         btnDesconectar = new JButton("Desconectar");
-        btnDesconectar.setFont(new Font("Open Sans", Font.BOLD, 14));
+        btnDesconectar.setFont(new Font("Arial", Font.BOLD, 14));
         btnDesconectar.setPreferredSize(new Dimension(130, 30));
         btnDesconectar.setEnabled(false);
         
         lblEstado = new JLabel("No conectado");
-        lblEstado.setFont(new Font("Open Sans", Font.BOLD, 14));
+        lblEstado.setFont(new Font("Arial", Font.BOLD, 14));
         
         panelSuperior.add(labelIp);
         panelSuperior.add(txtIp);
@@ -98,7 +98,7 @@ public class Client extends JFrame implements ActionListener {
 
         // Panel central
         areaChat = new JTextArea();
-        areaChat.setFont(new Font("Open Sans", Font.PLAIN, 14));
+        areaChat.setFont(new Font("Arial", Font.PLAIN, 14));
         areaChat.setEditable(false);
         scroll = new JScrollPane(areaChat);
         
@@ -110,19 +110,19 @@ public class Client extends JFrame implements ActionListener {
         panelInferior = new JPanel(fl_panelInferior);
         
         chkPrivado = new JCheckBox("Privado");
-        chkPrivado.setFont(new Font("Open Sans", Font.BOLD, 14));
+        chkPrivado.setFont(new Font("Arial", Font.BOLD, 14));
         
         labelPara = new JLabel("Para:");
-        labelPara.setFont(new Font("Open Sans", Font.BOLD, 14));
+        labelPara.setFont(new Font("Arial", Font.BOLD, 14));
         
         clientes = new JComboBox<>();
         clientes.setPreferredSize(new Dimension(130, 22));
         
-        txtMensaje = new JTextField(38);
-        txtMensaje.setFont(new Font("Open Sans", Font.PLAIN, 14));
+        txtMensaje = new JTextField(45);
+        txtMensaje.setFont(new Font("Arial", Font.PLAIN, 14));
         
         btnEnviar = new JButton("Enviar");
-        btnEnviar.setFont(new Font("Open Sans", Font.BOLD, 14));
+        btnEnviar.setFont(new Font("Arial", Font.BOLD, 14));
         btnEnviar.setEnabled(false);
 
         panelInferior.add(chkPrivado);
