@@ -151,6 +151,7 @@ public class Client extends JFrame implements ActionListener {
 			if (chkPrivado.isSelected()) {
 				clientes.setEnabled(true);
 			} else {
+				clientes.setSelectedIndex(-1);
 				clientes.setEnabled(false);
 			}
 		}
