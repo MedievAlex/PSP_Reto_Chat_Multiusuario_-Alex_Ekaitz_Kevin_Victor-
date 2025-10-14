@@ -5,10 +5,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import model.Mensaje;
+
 public class ClientThread extends Thread {
     private Socket socket;
     private Server server;
     private String usuario;
+    private ObjectOutputStream salida;
+    private ObjectInputStream entrada;
+    private boolean conectado = false;
 
     public ClientThread(Socket socket, Server server) {
         this.socket = socket;
@@ -17,34 +22,39 @@ public class ClientThread extends Thread {
 
     @Override
     public void run() {
-        try (ObjectOutputStream salida = new ObjectOutputStream(socket.getOutputStream());
-             ObjectInputStream entrada = new ObjectInputStream(socket.getInputStream())) {
-        	Object mensaje;
-
+        try {
+        	Mensaje mensaje;
+        	
+        	salida = new ObjectOutputStream(socket.getOutputStream());
+        	entrada = new ObjectInputStream(socket.getInputStream());
+        	
             usuario = (String) entrada.readObject();
 
-            if (server.getUsuariosActivos().size() >= server.getLimite()) {
-                salida.writeObject("ERROR_LLENO");
+            if (server.getClientesActivos().size() >= server.getLimite()) {
+                salida.writeObject(new Mensaje("ERROR_LLENO"));
                 return;
             }
 
-            if (server.getUsuariosActivos().contains(usuario)) {
-                salida.writeObject("ERROR_DUPLICADO");
+            if (server.getClientesActivos().contains(usuario)) {
+                salida.writeObject(new Mensaje("ERROR_DUPLICADO"));
                 return;
             }
             
-            server.conexion(usuario);
+            conectado = true;
+            salida.writeObject(new Mensaje("OK"));
+            server.conexion(usuario, this);
 
-            salida.writeObject("OK");
-
-            while ((mensaje = entrada.readObject()) != null) {
+            while ((mensaje = (Mensaje) entrada.readObject()) != null) {
+            	if ("DESCONEXION".equals(mensaje.getContenido())) {
+                    System.out.println("Usuario " + usuario + " se desconectó");
+                    break;
+                }
                 System.out.println("[" + usuario + "]: " + mensaje.toString());
             }
-
         } catch (IOException | ClassNotFoundException e) {
-            System.err.println("Cliente " + usuario + " desconectado o error: " + e.getMessage());
+            System.err.println("Error con el cliente " + usuario + ": " + e.getMessage());
         } finally {
-            if (usuario != null) {
+            if (usuario != null && conectado) {
                 server.desconexion(usuario);
             }
             try {
@@ -53,5 +63,13 @@ public class ClientThread extends Thread {
                 e.printStackTrace();
             }
         }
+    }
+    
+    public void enviarMensaje(Mensaje mensaje) {
+    	try {
+			salida.writeObject(mensaje);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 }
