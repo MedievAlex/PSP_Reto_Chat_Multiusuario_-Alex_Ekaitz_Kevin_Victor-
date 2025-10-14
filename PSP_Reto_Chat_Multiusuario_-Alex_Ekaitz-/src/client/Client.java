@@ -4,10 +4,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Client extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
-	private FlowLayout fl_panelSuperior;
+
+	private ConexionThread hilo;
+
 	private JPanel panelSuperior;
 	private JLabel labelIp;
 	private JTextField txtIp;
@@ -18,135 +22,143 @@ public class Client extends JFrame implements ActionListener {
 	private JButton btnConectar;
 	private JButton btnDesconectar;
 	private JLabel lblEstado;
+	private JLabel lblContador;
 	private JTextArea areaChat;
 	private JScrollPane scroll;
-	private FlowLayout fl_panelInferior;
 	private JPanel panelInferior;
 	private JCheckBox chkPrivado;
 	private JLabel labelPara;
 	private JComboBox<String> clientes;
 	private JTextField txtMensaje;
 	private JButton btnEnviar;
-	
-	/**
-	 * Launch the application.
-	 */
+
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Client frame = new Client();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				Client frame = new Client();
+				frame.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public Client() {
-        setTitle("Chat Multiusuario");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(890, 550);
+		setTitle("Chat Multiusuario");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(980, 550);
+		setLocationRelativeTo(null);
 
-        // Panel superior
-        fl_panelSuperior = new FlowLayout(FlowLayout.LEFT);
-        fl_panelSuperior.setVgap(10);
-        panelSuperior = new JPanel(fl_panelSuperior);
-        
-        labelIp = new JLabel("IP:");
-        labelIp.setFont(new Font("Arial", Font.BOLD, 14));
-        txtIp = new JTextField("127.0.0.1", 10);
-        txtIp.setFont(new Font("Arial", Font.PLAIN, 14));
+		// PANEL SUPERIOR
+		panelSuperior = new JPanel(new BorderLayout());
 
-        labelPuerto = new JLabel("Puerto:");
-        labelPuerto.setFont(new Font("Arial", Font.BOLD, 14));
-        txtPuerto = new JTextField("1234", 4);
-        txtPuerto.setFont(new Font("Arial", Font.PLAIN, 14));
+		JPanel panelIzquierdo = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
-        labelUsuario = new JLabel("Usuario:");
-        labelUsuario.setFont(new Font("Arial", Font.BOLD, 14));
-        txtUsuario = new JTextField(8);
-        txtUsuario.setFont(new Font("Arial", Font.PLAIN, 14));
+		labelIp = new JLabel("IP:");
+		labelIp.setFont(new Font("Arial", Font.BOLD, 14));
+		txtIp = new JTextField("127.0.0.1", 10);
+		txtIp.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        btnConectar = new JButton("Conectar");
-        btnConectar.setFont(new Font("Arial", Font.BOLD, 14));
-        btnConectar.setPreferredSize(new Dimension(120, 30));
-        btnConectar.addActionListener(this);
-        
-        btnDesconectar = new JButton("Desconectar");
-        btnDesconectar.setFont(new Font("Arial", Font.BOLD, 14));
-        btnDesconectar.setPreferredSize(new Dimension(130, 30));
-        btnDesconectar.setEnabled(false);
-        btnDesconectar.addActionListener(this);
-        
-        lblEstado = new JLabel("No conectado");
-        lblEstado.setFont(new Font("Arial", Font.BOLD, 14));
-        
-        panelSuperior.add(labelIp);
-        panelSuperior.add(txtIp);
-        panelSuperior.add(labelPuerto);
-        panelSuperior.add(txtPuerto);
-        panelSuperior.add(labelUsuario);
-        panelSuperior.add(txtUsuario);
-        panelSuperior.add(btnConectar);
-        panelSuperior.add(btnDesconectar);
-        panelSuperior.add(lblEstado);
+		labelPuerto = new JLabel("Puerto:");
+		labelPuerto.setFont(new Font("Arial", Font.BOLD, 14));
+		txtPuerto = new JTextField("1234", 4);
+		txtPuerto.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        getContentPane().add(panelSuperior, BorderLayout.NORTH);
+		labelUsuario = new JLabel("Usuario:");
+		labelUsuario.setFont(new Font("Arial", Font.BOLD, 14));
+		txtUsuario = new JTextField(8);
+		txtUsuario.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        // Panel central
-        areaChat = new JTextArea();
-        areaChat.setFont(new Font("Arial", Font.PLAIN, 14));
-        areaChat.setEditable(false);
-        scroll = new JScrollPane(areaChat);
-        
-        getContentPane().add(scroll, BorderLayout.CENTER);
+		btnConectar = new JButton("Conectar");
+		btnConectar.setFont(new Font("Arial", Font.BOLD, 14));
+		btnConectar.setPreferredSize(new Dimension(120, 30));
+		btnConectar.addActionListener(this);
 
-        // Panel inferior
-        fl_panelInferior = new FlowLayout(FlowLayout.LEFT);
-        fl_panelInferior.setVgap(10);
-        panelInferior = new JPanel(fl_panelInferior);
-        
-        chkPrivado = new JCheckBox("Privado");
-        chkPrivado.setFont(new Font("Arial", Font.BOLD, 14));
-        chkPrivado.addActionListener(this);
-        
-        labelPara = new JLabel("Para:");
-        labelPara.setFont(new Font("Arial", Font.BOLD, 14));
-        
-        clientes = new JComboBox<>();
-        clientes.setPreferredSize(new Dimension(130, 22));
-        clientes.setEnabled(false);
-        
-        txtMensaje = new JTextField(45);
-        txtMensaje.setFont(new Font("Arial", Font.PLAIN, 14));
-        
-        btnEnviar = new JButton("Enviar");
-        btnEnviar.setFont(new Font("Arial", Font.BOLD, 14));
-        btnEnviar.setEnabled(false);
-        btnEnviar.addActionListener(this);
-        
-        panelInferior.add(chkPrivado);
-        panelInferior.add(labelPara);
-        panelInferior.add(clientes);
-        panelInferior.add(txtMensaje);
-        panelInferior.add(btnEnviar);
+		btnDesconectar = new JButton("Desconectar");
+		btnDesconectar.setFont(new Font("Arial", Font.BOLD, 14));
+		btnDesconectar.setPreferredSize(new Dimension(130, 30));
+		btnDesconectar.setEnabled(false);
+		btnDesconectar.addActionListener(this);
 
-        getContentPane().add(panelInferior, BorderLayout.SOUTH);
-    }
-	
+		lblEstado = new JLabel("No conectado");
+		lblEstado.setFont(new Font("Arial", Font.BOLD, 14));
+
+		panelIzquierdo.add(labelIp);
+		panelIzquierdo.add(txtIp);
+		panelIzquierdo.add(labelPuerto);
+		panelIzquierdo.add(txtPuerto);
+		panelIzquierdo.add(labelUsuario);
+		panelIzquierdo.add(txtUsuario);
+		panelIzquierdo.add(btnConectar);
+		panelIzquierdo.add(btnDesconectar);
+		panelIzquierdo.add(lblEstado);
+
+		JPanel panelDerecho = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 17));
+
+		lblContador = new JLabel("");
+		lblContador.setFont(new Font("Arial", Font.PLAIN, 14));
+
+		panelDerecho.add(lblContador);
+
+		panelSuperior.add(panelIzquierdo, BorderLayout.WEST);
+		panelSuperior.add(panelDerecho, BorderLayout.EAST);
+
+		getContentPane().add(panelSuperior, BorderLayout.NORTH);
+
+		// PANEL CENTRAL
+		areaChat = new JTextArea();
+		areaChat.setFont(new Font("Arial", Font.PLAIN, 14));
+		areaChat.setEditable(false);
+
+		scroll = new JScrollPane(areaChat);
+
+		getContentPane().add(scroll, BorderLayout.CENTER);
+
+		// PANEL INFERIOR
+		panelInferior = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+
+		chkPrivado = new JCheckBox("Privado");
+		chkPrivado.setFont(new Font("Arial", Font.BOLD, 14));
+		chkPrivado.addActionListener(this);
+
+		labelPara = new JLabel("Para:");
+		labelPara.setFont(new Font("Arial", Font.BOLD, 14));
+
+		clientes = new JComboBox<>();
+		clientes.setPreferredSize(new Dimension(150, 22));
+		clientes.setEnabled(false);
+
+		txtMensaje = new JTextField(50);
+		txtMensaje.setFont(new Font("Arial", Font.PLAIN, 14));
+
+		btnEnviar = new JButton("Enviar");
+		btnEnviar.setFont(new Font("Arial", Font.BOLD, 14));
+		btnEnviar.setEnabled(false);
+		btnEnviar.addActionListener(this);
+
+		panelInferior.add(chkPrivado);
+		panelInferior.add(labelPara);
+		panelInferior.add(clientes);
+		panelInferior.add(txtMensaje);
+		panelInferior.add(btnEnviar);
+
+		getContentPane().add(panelInferior, BorderLayout.SOUTH);
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub	
 		if (e.getSource() == btnConectar) {
 			if (txtIp.getText().isEmpty() || txtPuerto.getText().isEmpty() || txtUsuario.getText().isEmpty()) {
-				JOptionPane.showMessageDialog(this, "Rellene los campos IP, Puerto y Usuario", "Atención", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Rellene los campos IP, Puerto y Usuario", "Atención",
+						JOptionPane.WARNING_MESSAGE);
 				return;
+			} else {
+				hilo = new ConexionThread(txtIp.getText(), Integer.parseInt(txtPuerto.getText()), txtUsuario.getText(),
+						this);
+				hilo.start();
 			}
+		} else if (e.getSource() == btnDesconectar) {
+			desconectarCliente();
 		} else if (e.getSource() == chkPrivado) {
 			if (chkPrivado.isSelected()) {
 				clientes.setEnabled(true);
@@ -156,8 +168,56 @@ public class Client extends JFrame implements ActionListener {
 			}
 		}
 	}
-	
-	public void llenarListaUsuarios() {
+
+	public void conexionExitosa() {
+		SwingUtilities.invokeLater(() -> {
+			lblEstado.setText("Conectado");
+			txtIp.setEditable(false);
+			txtPuerto.setEditable(false);
+			txtUsuario.setEditable(false);
+			btnConectar.setEnabled(false);
+			btnDesconectar.setEnabled(true);
+			btnEnviar.setEnabled(true);
+		});
+	}
+
+	public void conexionFallida(String mensajeError) {
+		SwingUtilities.invokeLater(() -> {
+			JOptionPane.showMessageDialog(this, mensajeError, "Error de Conexión", JOptionPane.ERROR_MESSAGE);
+			lblEstado.setText("No conectado");
+			txtIp.setEditable(true);
+			txtPuerto.setEditable(true);
+			txtUsuario.setEditable(true);
+			btnConectar.setEnabled(true);
+			btnDesconectar.setEnabled(false);
+			btnEnviar.setEnabled(false);
+			lblContador.setText("");
+		});
+	}
+
+	public void actualizarClientes(List<String> clientes) {
+		List<String> clientesFiltrados = new ArrayList<>(clientes);
 		
+		SwingUtilities.invokeLater(() -> {
+			lblContador.setText("Conectados: " + String.valueOf(clientes.size()));
+			
+			clientesFiltrados.remove(txtUsuario.getText());
+
+			this.clientes.setModel(new DefaultComboBoxModel<String>(clientesFiltrados.toArray(new String[0])));
+			this.clientes.setSelectedIndex(-1);
+		});
+	}
+	
+	public void desconectarCliente() {
+		hilo.desconectar();
+		lblEstado.setText("No conectado");
+		txtIp.setEditable(true);
+		txtPuerto.setEditable(true);
+		txtUsuario.setEditable(true);
+		btnConectar.setEnabled(true);
+		btnDesconectar.setEnabled(false);
+		btnEnviar.setEnabled(false);
+		lblContador.setText("");
+		this.clientes.removeAllItems();
 	}
 }
