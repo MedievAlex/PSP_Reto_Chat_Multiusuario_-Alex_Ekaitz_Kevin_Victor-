@@ -43,25 +43,39 @@ public class Server {
 	public synchronized void conexion(String usuario, ClientThread hilo) {
 		clientes.put(usuario, hilo);
 		System.out.println("Usuario conectado: " + usuario + " | Activos: " + clientes.size());
-		actualizarClientes();
+		actualizarClientes(true, usuario);
 	}
 
 	public synchronized void desconexion(String usuario) {
 		clientes.remove(usuario);
 		System.out.println("Usuario desconectado: " + usuario + " | Activos: " + clientes.size());
-		actualizarClientes();
+		actualizarClientes(false, usuario);
 	}
 
 	public synchronized List<String> getClientesActivos() {
 		return new ArrayList<>(clientes.keySet());
 	}
-
-	public synchronized void actualizarClientes() {
-		Mensaje mensaje = new Mensaje(getClientesActivos());
+	
+	public synchronized void enviarMensajePublico(Mensaje mensaje) {
+	    for (ClientThread hilo : clientes.values()) {
+	    	if (!hilo.getUsuario().equals(mensaje.getRemitente())) {
+	            hilo.enviarMensaje(mensaje);
+	        }
+	    }
+	}
+	
+	public synchronized void enviarMensajePrivado(Mensaje mensaje) {
+		ClientThread destinatario = clientes.get(mensaje.getDestinatario());
 		
-		for (ClientThread hilo : clientes.values()) {
-			hilo.enviarMensaje(mensaje);
+		if (destinatario != null) {
+			destinatario.enviarMensaje(mensaje);
 		}
+	}
+
+	public synchronized void actualizarClientes(boolean conectado, String usuario) {
+		enviarMensajePublico(new Mensaje(getClientesActivos()));
+
+		enviarMensajePublico(new Mensaje("Cliente " + usuario + (conectado ? " conectado." : " desconectado."), "Server"));
 	}
 
 	public int getLimite() {

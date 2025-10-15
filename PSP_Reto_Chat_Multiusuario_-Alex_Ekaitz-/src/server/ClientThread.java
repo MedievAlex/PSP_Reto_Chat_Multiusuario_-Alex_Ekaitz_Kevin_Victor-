@@ -40,12 +40,21 @@ public class ClientThread extends Thread {
                 return;
             }
             
+            if ("Server".equalsIgnoreCase(usuario)) {
+                salida.writeObject(new Mensaje("ERROR_RESERVADO"));
+                return;
+            }
+            
             conectado = true;
             salida.writeObject(new Mensaje("OK"));
             server.conexion(usuario, this);
 
             while ((mensaje = (Mensaje) entrada.readObject()) != null) {
-            	if ("DESCONEXION".equals(mensaje.getContenido())) {
+            	if ("mensaje_publico".equals(mensaje.getTipo())) {
+            		server.enviarMensajePublico(mensaje);
+                } else if ("mensaje_privado".equals(mensaje.getTipo())) {
+            		server.enviarMensajePrivado(mensaje);
+                }else if ("DESCONEXION".equals(mensaje.getContenido())) {
                     System.out.println("Usuario " + usuario + " se desconectó");
                     break;
                 }
@@ -71,5 +80,9 @@ public class ClientThread extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+    }
+    
+    public String getUsuario() {
+    	return usuario;
     }
 }

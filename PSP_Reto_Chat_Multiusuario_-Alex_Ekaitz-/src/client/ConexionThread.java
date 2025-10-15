@@ -46,6 +46,10 @@ public class ConexionThread extends Thread {
                         
                         if ("lista_clientes".equals(mensaje.getTipo())) {
                         	cliente.actualizarClientes(mensaje.getClientes());
+                        } else if ("mensaje_publico".equals(mensaje.getTipo())) {
+                            cliente.mostrarMensaje("Público", mensaje.getRemitente(), mensaje.getContenido());
+                        } else if ("mensaje_privado".equals(mensaje.getTipo())) {
+                            cliente.mostrarMensaje("Privado", mensaje.getRemitente(), mensaje.getContenido());
                         }
                     } catch (IOException e) {
                         if (conectado) {
@@ -61,6 +65,8 @@ public class ConexionThread extends Thread {
                 cliente.conexionFallida("Servidor lleno");
             } else if ("ERROR_DUPLICADO".equals(mensaje.getContenido())) {
                 cliente.conexionFallida("Usuario ya conectado");
+            } else if ("ERROR_RESERVADO".equals(mensaje.getContenido())) {
+            	cliente.conexionFallida("Nombre de usuario inválido");
             }
             
         } catch (IOException | ClassNotFoundException ex) {
@@ -68,6 +74,14 @@ public class ConexionThread extends Thread {
             cliente.conexionFallida("Error de conexión: " + ex.getMessage());
         } finally {
         	cerrarConexion();
+        }
+    }
+    
+    public void enviarMensaje(Mensaje mensaje) {
+        try {
+            salida.writeObject(mensaje);
+        } catch (IOException e) {
+            System.err.println("Error enviando mensaje: " + e.getMessage());
         }
     }
     
