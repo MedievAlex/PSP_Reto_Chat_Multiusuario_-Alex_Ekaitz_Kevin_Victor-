@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import logger.GeneraLog;
 import model.Mensaje;
 
 public class ClientThread extends Thread {
@@ -52,16 +53,21 @@ public class ClientThread extends Thread {
             while ((mensaje = (Mensaje) entrada.readObject()) != null) {
             	if ("mensaje_publico".equals(mensaje.getTipo())) {
             		server.enviarMensajePublico(mensaje);
+            		GeneraLog.getLogger().info("(Público) [" + usuario + "]: " + mensaje);
+            		server.setUltimoMensaje(mensaje);
                 } else if ("mensaje_privado".equals(mensaje.getTipo())) {
             		server.enviarMensajePrivado(mensaje);
-                }else if ("DESCONEXION".equals(mensaje.getContenido())) {
+            		GeneraLog.getLogger().info("(Privado) [" + usuario + "]: " + mensaje);
+            		server.setUltimoMensaje(mensaje);
+                }else if ("respuesta_server".equals(mensaje.getTipo()) && "DESCONEXION".equals(mensaje.getContenido())) {
                     System.out.println("Usuario " + usuario + " se desconectó");
+                    GeneraLog.getLogger().info("Usuario " + usuario + " se desconectó");
                     break;
                 }
-                System.out.println("[" + usuario + "]: " + mensaje.toString());
             }
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Error con el cliente " + usuario + ": " + e.getMessage());
+            GeneraLog.getLogger().severe("Error con el cliente " + usuario + ": " + e.getMessage());
         } finally {
             if (usuario != null && conectado) {
                 server.desconexion(usuario);
@@ -70,6 +76,7 @@ public class ClientThread extends Thread {
                 socket.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                GeneraLog.getLogger().warning("Error cerrando socket: " + e.getMessage());
             }
         }
     }
@@ -79,6 +86,7 @@ public class ClientThread extends Thread {
 			salida.writeObject(mensaje);
 		} catch (IOException e) {
 			e.printStackTrace();
+			GeneraLog.getLogger().warning("Error enviando mensaje: " + e.getMessage());
 		}
     }
     
