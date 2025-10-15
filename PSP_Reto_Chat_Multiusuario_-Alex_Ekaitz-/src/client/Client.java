@@ -1,6 +1,9 @@
 package client;
 
 import javax.swing.*;
+
+import model.Mensaje;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -120,6 +123,7 @@ public class Client extends JFrame implements ActionListener {
 		chkPrivado = new JCheckBox("Privado");
 		chkPrivado.setFont(new Font("Arial", Font.BOLD, 14));
 		chkPrivado.addActionListener(this);
+		chkPrivado.setEnabled(false);
 
 		labelPara = new JLabel("Para:");
 		labelPara.setFont(new Font("Arial", Font.BOLD, 14));
@@ -130,6 +134,7 @@ public class Client extends JFrame implements ActionListener {
 
 		txtMensaje = new JTextField(50);
 		txtMensaje.setFont(new Font("Arial", Font.PLAIN, 14));
+		txtMensaje.setEnabled(false);
 
 		btnEnviar = new JButton("Enviar");
 		btnEnviar.setFont(new Font("Arial", Font.BOLD, 14));
@@ -149,34 +154,47 @@ public class Client extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnConectar) {
 			if (txtIp.getText().isEmpty() || txtPuerto.getText().isEmpty() || txtUsuario.getText().isEmpty()) {
-				JOptionPane.showMessageDialog(this, "Rellene los campos IP, Puerto y Usuario", "Atención",
-						JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Rellene los campos IP, Puerto y Usuario", "Atención", JOptionPane.WARNING_MESSAGE);
 				return;
-			} else {
-				hilo = new ConexionThread(txtIp.getText(), Integer.parseInt(txtPuerto.getText()), txtUsuario.getText(),
-						this);
-				hilo.start();
 			}
+
+			hilo = new ConexionThread(txtIp.getText(), Integer.parseInt(txtPuerto.getText()), txtUsuario.getText(), this);
+			hilo.start();
+
 		} else if (e.getSource() == btnDesconectar) {
 			desconectarCliente();
+		} else if (e.getSource() == btnEnviar) {
+			if (chkPrivado.isSelected() && clientes.getSelectedIndex() == -1) {
+				JOptionPane.showMessageDialog(this, "Debe seleccionar un usuario", "Atención", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+
+			if (txtMensaje.getText().isEmpty()) {
+				JOptionPane.showMessageDialog(this, "Debe introducir un mensaje", "Atención", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			
+			enviarMensaje();
+
 		} else if (e.getSource() == chkPrivado) {
-			if (chkPrivado.isSelected()) {
-				clientes.setEnabled(true);
-			} else {
+			clientes.setEnabled(chkPrivado.isSelected());
+			
+			if (!chkPrivado.isSelected()) {
 				clientes.setSelectedIndex(-1);
-				clientes.setEnabled(false);
 			}
 		}
 	}
 
 	public void conexionExitosa() {
 		SwingUtilities.invokeLater(() -> {
-			lblEstado.setText("Conectado");
 			txtIp.setEditable(false);
 			txtPuerto.setEditable(false);
 			txtUsuario.setEditable(false);
 			btnConectar.setEnabled(false);
 			btnDesconectar.setEnabled(true);
+			lblEstado.setText("Conectado");
+			chkPrivado.setEnabled(true);
+			txtMensaje.setEnabled(true);
 			btnEnviar.setEnabled(true);
 		});
 	}
@@ -184,23 +202,25 @@ public class Client extends JFrame implements ActionListener {
 	public void conexionFallida(String mensajeError) {
 		SwingUtilities.invokeLater(() -> {
 			JOptionPane.showMessageDialog(this, mensajeError, "Error de Conexión", JOptionPane.ERROR_MESSAGE);
-			lblEstado.setText("No conectado");
 			txtIp.setEditable(true);
 			txtPuerto.setEditable(true);
 			txtUsuario.setEditable(true);
 			btnConectar.setEnabled(true);
 			btnDesconectar.setEnabled(false);
-			btnEnviar.setEnabled(false);
+			lblEstado.setText("No conectado");
 			lblContador.setText("");
+			chkPrivado.setEnabled(false);
+			txtMensaje.setEnabled(false);
+			btnEnviar.setEnabled(false);
 		});
 	}
 
 	public void actualizarClientes(List<String> clientes) {
 		List<String> clientesFiltrados = new ArrayList<>(clientes);
-		
+
 		SwingUtilities.invokeLater(() -> {
 			lblContador.setText("Conectados: " + String.valueOf(clientes.size()));
-			
+
 			clientesFiltrados.remove(txtUsuario.getText());
 
 			this.clientes.setModel(new DefaultComboBoxModel<String>(clientesFiltrados.toArray(new String[0])));
@@ -208,16 +228,38 @@ public class Client extends JFrame implements ActionListener {
 		});
 	}
 	
+	public void enviarMensaje() {
+		Mensaje mensaje;
+		
+		if (chkPrivado.isSelected()) {
+			mensaje = new Mensaje(txtMensaje.getText(), txtUsuario.getText(), String.valueOf(clientes.getSelectedItem()));
+			mostrarMensaje("Privado", "Yo -> " + mensaje.getDestinatario(), txtMensaje.getText());
+		} else {
+			mensaje = new Mensaje(txtMensaje.getText(), txtUsuario.getText());
+			mostrarMensaje("Público", "Yo", txtMensaje.getText());
+		}
+		
+		hilo.enviarMensaje(mensaje);
+		
+		txtMensaje.setText("");
+	}
+
+	public void mostrarMensaje(String tipo, String remitente, String contenido) {
+		areaChat.append("(" + tipo + ") [" + remitente + "]: " + contenido + "\n\n");
+	}
+
 	public void desconectarCliente() {
 		hilo.desconectar();
-		lblEstado.setText("No conectado");
 		txtIp.setEditable(true);
 		txtPuerto.setEditable(true);
 		txtUsuario.setEditable(true);
 		btnConectar.setEnabled(true);
 		btnDesconectar.setEnabled(false);
-		btnEnviar.setEnabled(false);
+		lblEstado.setText("No conectado");
 		lblContador.setText("");
+		chkPrivado.setEnabled(false);
 		this.clientes.removeAllItems();
+		txtMensaje.setEnabled(false);
+		btnEnviar.setEnabled(false);
 	}
 }
