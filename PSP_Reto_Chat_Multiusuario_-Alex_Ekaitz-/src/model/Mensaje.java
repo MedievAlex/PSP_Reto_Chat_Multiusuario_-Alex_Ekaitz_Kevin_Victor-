@@ -17,7 +17,7 @@ public class Mensaje implements Serializable {
      * @param respuesta Respuesta del servidor
      */
     public Mensaje(String respuesta) {
-        this.tipo = "respuesta_servidor";
+        this.tipo = "respuesta_server";
         this.contenido = respuesta;
     }
     
@@ -57,18 +57,20 @@ public class Mensaje implements Serializable {
 	public String getTipo() {
 		return tipo;
 	}
+	
 	public List<String> getClientes() {
 		return clientes;
 	}
+	
 	public String getContenido() {
 		return contenido;
 	}
+	
 	public String getRemitente() {
 		return remitente;
 	}
+	
 	public String getDestinatario() {
 		return destinatario;
 	}
-    
-    
 }

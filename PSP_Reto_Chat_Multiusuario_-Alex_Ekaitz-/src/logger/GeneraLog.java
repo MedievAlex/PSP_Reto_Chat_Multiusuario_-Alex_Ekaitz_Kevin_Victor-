@@ -1,4 +1,4 @@
-package LogsProyecto;
+package logger;
 
 import java.io.IOException;
 import java.io.File;
@@ -15,18 +15,18 @@ public class GeneraLog {
     private GeneraLog() {
         // Inicializa el logger solo si no se ha inicializado previamente
         if (logger == null) {
-        	File carpeta = new File("C:\\Users\\1dami.TARTANGALH\\eclipse-workspace\\EjemploLogger\\src\\LogsProyecto"); // Ruta de la carpeta
+        	File carpeta = new File("./logs"); // Ruta de la carpeta
 
-            if (!carpeta.exists()) 
+            if (!carpeta.exists())
                 carpeta.mkdir();
-             
+
             try {
                 // Configura el logger
                 logger = Logger.getLogger(GeneraLog.class.getName());
                 // A false evita la salida en consola
                 logger.setUseParentHandlers(false);
-                fileHandler = new FileHandler("C:\\Users\\1dami.TARTANGALH\\eclipse-workspace\\EjemploLogger\\src\\LogsProyecto\\ProyectLogs.log", true); // Ruta de la carpeta + nombre archivo .log [true = append mode]
-           
+                fileHandler = new FileHandler("./logs/ProyectLogs.log", true); // Ruta de la carpeta + nombre archivo .log [true = append mode]
+
                 SimpleFormatter formatter = new SimpleFormatter();
                 fileHandler.setFormatter(formatter);
                 logger.addHandler(fileHandler);
@@ -39,16 +39,16 @@ public class GeneraLog {
 
     // Método para obtener la instancia del logger
     public static Logger getLogger() {
-        if (logger == null) 
+        if (logger == null)
             new GeneraLog(); // Si aún no se ha creado, inicialízalo
-        
+
         return logger;
     }
 
     // Método para cerrar el fileHandler
     public static void closeLogger() {
-        if (fileHandler != null) 
+        if (fileHandler != null)
             fileHandler.close();
-        
+
     }
 }
