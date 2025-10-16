@@ -60,19 +60,22 @@ public class ClientThread extends Thread {
             salida.writeObject(new Mensaje("OK"));
             server.conexion(usuario, this);
 
+            // MensajeS enviadoS
             while ((mensaje = (Mensaje) entrada.readObject()) != null) 
             {
-            	if ("mensaje_publico".equals(mensaje.getTipo())) 
+            	if ("mensaje_publico".equals(mensaje.getTipo())) // Si el menasaje es publico
             	{
             		server.enviarMensajePublico(mensaje);
             		GeneraLog.getLogger().info("(Público) [" + usuario + "]: " + mensaje);
             		server.setUltimoMensaje(mensaje);
-                } else if ("mensaje_privado".equals(mensaje.getTipo())) 
+                } 
+            	else if ("mensaje_privado".equals(mensaje.getTipo())) // Si el menasaje es privado
                 {
             		server.enviarMensajePrivado(mensaje);
             		GeneraLog.getLogger().info("(Privado) [" + usuario + "]: " + mensaje);
             		server.setUltimoMensaje(mensaje);
-                }else if ("respuesta_server".equals(mensaje.getTipo()) && "DESCONEXION".equals(mensaje.getContenido())) 
+                }
+            	else if ("respuesta_server".equals(mensaje.getTipo()) && "DESCONEXION".equals(mensaje.getContenido())) // Si el menasaje es de desconexion
                 {
                     System.out.println("Usuario " + usuario + " se desconectó");
                     GeneraLog.getLogger().info("Usuario " + usuario + " se desconectó");
@@ -82,12 +85,13 @@ public class ClientThread extends Thread {
         } 
         catch (IOException | ClassNotFoundException e) 
         {
-            System.err.println("Error con el cliente " + usuario + ": " + e.getMessage());
-            GeneraLog.getLogger().severe("Error con el cliente " + usuario + ": " + e.getMessage());
+            System.err.println("[ERROR CON EL CLIENTE (" + usuario + "): " + e.getMessage());
+            GeneraLog.getLogger().severe("[ERROR CON EL CLIENTE (" + usuario + "): " + e.getMessage());
         } 
+        
         finally 
         {
-            if (usuario != null && conectado) 
+            if (usuario != null && conectado) // Desconecta el usuario
             {
                 server.desconexion(usuario);
             }
@@ -98,7 +102,8 @@ public class ClientThread extends Thread {
             catch (IOException e) 
             {
                 e.printStackTrace();
-                GeneraLog.getLogger().warning("Error cerrando socket: " + e.getMessage());
+                // System.err.println("[ERROR CERRANDO EL SOCKET]: " + e.getMessage()); (ClientThread) Linea: 104
+                GeneraLog.getLogger().warning("[ERROR CERRANDO EL SOCKET]: " + e.getMessage());
             }
         }
     }
@@ -113,7 +118,8 @@ public class ClientThread extends Thread {
     	catch (IOException e) 
     	{
 			e.printStackTrace();
-			GeneraLog.getLogger().warning("Error enviando mensaje: " + e.getMessage());
+			// System.err.println("[ERROR ENVIANDO MENSAJE]: " + e.getMessage()); (ClientThread) Linea: 121
+			GeneraLog.getLogger().warning("[ERROR ENVIANDO MENSAJE]: " + e.getMessage());
 		}
     }
     
