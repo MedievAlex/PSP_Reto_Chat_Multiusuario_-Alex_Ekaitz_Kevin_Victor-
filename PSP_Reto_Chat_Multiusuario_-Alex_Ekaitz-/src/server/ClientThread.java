@@ -8,7 +8,8 @@ import java.net.Socket;
 import logger.GeneraLog;
 import model.Mensaje;
 
-public class ClientThread extends Thread {
+public class ClientThread extends Thread 
+{
     
 	// [ VARIABLES ]
 	private Socket socket; // Shocket del cliente
@@ -60,7 +61,7 @@ public class ClientThread extends Thread {
             salida.writeObject(new Mensaje("OK"));
             server.conexion(usuario, this);
 
-            // MensajeS enviadoS
+            // MensajeS enviados
             while ((mensaje = (Mensaje) entrada.readObject()) != null) 
             {
             	if ("mensaje_publico".equals(mensaje.getTipo())) // Si el menasaje es publico

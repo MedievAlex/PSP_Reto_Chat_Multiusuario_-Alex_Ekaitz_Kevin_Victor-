@@ -14,7 +14,8 @@ import java.util.TimerTask;
 import logger.GeneraLog;
 import model.Mensaje;
 
-public class Server {
+public class Server 
+{
 
 	// [ VARIABLES ]
 	private final int PUERTO = 1234; // Puerto elegido
