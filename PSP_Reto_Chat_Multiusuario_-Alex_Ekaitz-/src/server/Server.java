@@ -16,6 +16,7 @@ import model.Mensaje;
 
 public class Server {
 
+	// [ VARIABLES ]
 	private final int PUERTO = 1234; // Puerto elegido
 	private int limite = 6; // Limite de clientes simultaneos
 	private int tiempoMostrar = 30; // Tiempo entre mensajes
@@ -24,25 +25,36 @@ public class Server {
 	private long inicioServidor; // Momento de inicio
 	private Mensaje ultimoMensaje; // Registro de ultimo mensaje enviado
 
-	public static void main(String[] args) { // Crea e inicia el servidor
+	// [ MAIN ]
+	public static void main(String[] args) 
+	{ 
 		Server server = new Server(); 
 		server.iniciar();
 	}
 
-	public void iniciar() { 
-		try (ServerSocket serverSocket = new ServerSocket(PUERTO)) { // Cierra automaticamente el recurso al finalizar
+	// [ METODOS ]
+	public void iniciar() 
+	{ 
+		// Cierra automaticamente el recurso al finalizar (Try with resouces)
+		try (ServerSocket serverSocket = new ServerSocket(PUERTO)) 
+		{ 
 			System.out.println("Servidor iniciado. Esperando conexiones en el puerto " + PUERTO + "...");
 			inicioServidor = System.currentTimeMillis(); // Registra el momento de inicio del servidor
 			
 			Timer timer = new Timer();
 			
-			timer.scheduleAtFixedRate(new TimerTask() { // Muestra cada X tiempo un mensaje en el servidor
-			    public void run() {
+			// Muestra cada X tiempo un mensaje en el servidor
+			timer.scheduleAtFixedRate(new TimerTask() 
+			{ 
+			    public void run() 
+			    {
 			        actividadServer();
 			    }
 			}, 0, tiempoMostrar * 1000);
 			
-			while (true) { // Mantiene el servidor abierto
+			// Mantiene el servidor abierto
+			while (true) 
+			{
 				Socket clienteSocket = serverSocket.accept(); // Shocket para el cliente entrante
 				System.out.println("Nueva conexión entrante...");
 
@@ -50,7 +62,9 @@ public class Server {
 				hilo.start(); // Inicia el hilo
 			}
 
-		} catch (IOException ex) { // Gestiona los posibles errores de los shocket del servidor y cliente
+		} 
+		catch (IOException ex) // Gestiona los posibles errores de los shocket del servidor y cliente
+		{ 
 			System.err.println("[ERROR EN EL SERVIDOR]: " + ex.getMessage());
 			GeneraLog.getLogger().severe("[ERROR EN EL SERVIDOR]: " + ex.getMessage());
 		}
@@ -96,7 +110,8 @@ public class Server {
 		enviarMensajePublico(new Mensaje("Cliente " + usuario + (conectado ? " conectado." : " desconectado."), "Server"));
 	}
 	
-	public void actividadServer() { // Mensaje de informacion sobre el estado del servidor
+	public void actividadServer() // Mensaje de informacion sobre el estado del servidor
+	{ 
 		int clientesConectados = clientes.size();
 		long tiempoActivo = System.currentTimeMillis() - inicioServidor;
 		String log = "Estado Servidor | Clientes conectados: " + clientesConectados 
@@ -106,14 +121,17 @@ public class Server {
 		
 		System.out.println(log); // Muestra el mensaje
 		
-		GeneraLog.getLogger().info(log); // Escrube el mensaje en el logger
+		GeneraLog.getLogger().info(log); // Escribe el mensaje en el logger
 	}
 	
-	public synchronized void setUltimoMensaje(Mensaje mensaje) {
+	// [ GETTER Y SETTER NECESARIOS ]
+	public synchronized void setUltimoMensaje(Mensaje mensaje) 
+	{
 	    this.ultimoMensaje = mensaje;
 	}
 
-	public int getLimite() {
+	public int getLimite() 
+	{
 		return limite;
 	}
 }
