@@ -63,7 +63,7 @@ public class ClientThread extends Thread
             salida.writeObject(new Mensaje("OK"));
             server.conexion(usuario, this);
 
-            // MensajeS enviados
+            // Mensajes enviados
             while ((mensaje = (Mensaje) entrada.readObject()) != null) 
             {
             	if ("mensaje_publico".equals(mensaje.getTipo())) // Si el menasaje es publico
@@ -75,7 +75,7 @@ public class ClientThread extends Thread
             	else if ("mensaje_privado".equals(mensaje.getTipo())) // Si el menasaje es privado
                 {
             		server.enviarMensajePrivado(mensaje);
-            		GeneraLog.getLogger().info("(Privado) [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "De @" + usuario + "]: " + mensaje);
+            		GeneraLog.getLogger().info("(Privado) [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + " @" + usuario + "]: " + mensaje);
             		server.setUltimoMensaje(mensaje);
                 }
             	else if ("respuesta_server".equals(mensaje.getTipo()) && "DESCONEXION".equals(mensaje.getContenido())) // Si el menasaje es de desconexion
@@ -88,8 +88,8 @@ public class ClientThread extends Thread
         } 
         catch (IOException | ClassNotFoundException e) 
         {
-            System.err.println("[" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] ERROR CON EL CLIENTE (" + usuario + "): " + e.getMessage());
-            GeneraLog.getLogger().severe("[" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] ERROR CON EL CLIENTE (" + usuario + "): " + e.getMessage());
+            System.err.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] ERROR CON EL CLIENTE (" + usuario + "): " + e.getMessage());
+            GeneraLog.getLogger().severe(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] ERROR CON EL CLIENTE (" + usuario + "): " + e.getMessage());
         } 
         
         finally 
@@ -105,8 +105,8 @@ public class ClientThread extends Thread
             catch (IOException e) 
             {
                 e.printStackTrace();
-                // System.err.println("[ERROR CERRANDO EL SOCKET]: " + e.getMessage());
-                GeneraLog.getLogger().warning("[ERROR CERRANDO EL SOCKET]: " + e.getMessage());
+                // System.err.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] [ERROR CERRANDO EL SOCKET]: " + e.getMessage());
+                GeneraLog.getLogger().warning(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] ERROR CERRANDO EL SOCKET]: " + e.getMessage());
             }
         }
     }
@@ -121,8 +121,8 @@ public class ClientThread extends Thread
     	catch (IOException e) 
     	{
 			e.printStackTrace();
-			// System.err.println("[ERROR ENVIANDO MENSAJE]: " + e.getMessage()); 
-			GeneraLog.getLogger().warning("[ERROR ENVIANDO MENSAJE]: " + e.getMessage());
+			// System.err.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] [ERROR ENVIANDO MENSAJE]: " + e.getMessage()); 
+			GeneraLog.getLogger().warning(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] [ERROR ENVIANDO MENSAJE]: " + e.getMessage());
 		}
     }
     
