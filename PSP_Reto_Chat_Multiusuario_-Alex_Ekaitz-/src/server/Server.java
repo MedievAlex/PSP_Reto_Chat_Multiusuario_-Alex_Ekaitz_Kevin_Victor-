@@ -16,13 +16,13 @@ import model.Mensaje;
 
 public class Server {
 
-	private final int PUERTO = 1234;
-	private int limite = 6;
-	private int tiempoMostrar = 30;
-	private ClientThread hilo;
-	private Map<String, ClientThread> clientes = Collections.synchronizedMap(new HashMap<>());
-	private long inicioServidor;
-	private Mensaje ultimoMensaje;
+	private final int PUERTO = 1234; // Puerto elegido
+	private int limite = 6; // Limite de clientes simultaneos
+	private int tiempoMostrar = 30; // Tiempo entre mensajes
+	private ClientThread hilo; // Hilo para cada cliente
+	private Map<String, ClientThread> clientes = Collections.synchronizedMap(new HashMap<>()); // Mapa sincronizado de clientes con sus hilos
+	private long inicioServidor; // Momento de inicio
+	private Mensaje ultimoMensaje; // Registro de ultimo mensaje enviado
 
 	public static void main(String[] args) {
 		Server server = new Server();
