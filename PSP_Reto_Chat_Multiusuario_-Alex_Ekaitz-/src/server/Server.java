@@ -3,6 +3,8 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,7 +41,7 @@ public class Server
 		// Cierra automaticamente el recurso al finalizar (Try with resouces)
 		try (ServerSocket serverSocket = new ServerSocket(PUERTO)) 
 		{ 
-			System.out.println("Servidor iniciado. Esperando conexiones en el puerto " + PUERTO + "...");
+			System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Servidor iniciado. Esperando conexiones en el puerto " + PUERTO + "...");
 			inicioServidor = System.currentTimeMillis(); // Registra el momento de inicio del servidor
 			
 			Timer timer = new Timer();
@@ -57,7 +59,7 @@ public class Server
 			while (true) 
 			{
 				Socket clienteSocket = serverSocket.accept(); // Shocket para el cliente entrante
-				System.out.println("Nueva conexión entrante...");
+				System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Nueva conexión entrante...");
 
 				hilo = new ClientThread(clienteSocket, this); // Crea un hilo por el cliente entrante
 				hilo.start(); // Inicia el hilo
@@ -73,14 +75,14 @@ public class Server
 
 	public synchronized void conexion(String usuario, ClientThread hilo) {
 		clientes.put(usuario, hilo);
-		System.out.println("Usuario conectado: " + usuario + " | Activos: " + clientes.size());
+		System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Usuario conectado: " + usuario + " | Activos: " + clientes.size());
 		GeneraLog.getLogger().info("Usuario conectado: " + usuario + " | Activos: " + clientes.size());
 		actualizarClientes(true, usuario);
 	}
 
 	public synchronized void desconexion(String usuario) {
 		clientes.remove(usuario);
-		System.out.println("Usuario desconectado: " + usuario + " | Activos: " + clientes.size());
+		System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Usuario desconectado: " + usuario + " | Activos: " + clientes.size());
 		GeneraLog.getLogger().info("Usuario desconectado: " + usuario + " | Activos: " + clientes.size());
 		actualizarClientes(false, usuario);
 	}
@@ -115,7 +117,7 @@ public class Server
 	{ 
 		int clientesConectados = clientes.size();
 		long tiempoActivo = System.currentTimeMillis() - inicioServidor;
-		String log = "[ESTADO DEL SERVIDOR " + "HORA" + " ]:\n| Clientes conectados: " + clientesConectados 
+		String log = " [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] ESTADO DEL SERVIDOR:\n| Clientes conectados: " + clientesConectados 
 				+ " | Tiempo activo: " + (tiempoActivo / 1000) + "s" 
 				+ " | Último mensaje: " + (ultimoMensaje != null ? "(" + ("mensaje_publico".equals(ultimoMensaje.getTipo()) ? "Público" : "Privado") + ") " 
 				+ " [" + ultimoMensaje.getRemitente() + "]: " + ultimoMensaje.getContenido() : "Ninguno");

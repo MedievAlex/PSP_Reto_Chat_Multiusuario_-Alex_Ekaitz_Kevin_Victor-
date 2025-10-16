@@ -52,3 +52,130 @@ INFORMACIÓN: [ESTADO DEL SERVIDOR 1760615112059 ]:
 oct 16, 2025 1:45:42 P. M. server.Server actividadServer
 INFORMACIÓN: [ESTADO DEL SERVIDOR 1760615142058 ]:
 | Clientes conectados: 0 | Tiempo activo: 90s | Último mensaje: Ninguno
+oct 16, 2025 8:50:42 P. M. server.Server actividadServer
+INFORMACIÓN: [ESTADO DEL SERVIDOR HORA ]:
+| Clientes conectados: 0 | Tiempo activo: 0s | Último mensaje: Ninguno
+oct 16, 2025 8:51:05 P. M. server.Server conexion
+INFORMACIÓN: Usuario conectado: usuarioPrueba | Activos: 1
+oct 16, 2025 8:51:12 P. M. server.Server actividadServer
+INFORMACIÓN: [ESTADO DEL SERVIDOR HORA ]:
+| Clientes conectados: 1 | Tiempo activo: 30s | Último mensaje: Ninguno
+oct 16, 2025 8:51:23 P. M. server.ClientThread run
+INFORMACIÓN: (Público) [20:51 usuarioPrueba]: model.Mensaje@15130eea
+oct 16, 2025 8:51:42 P. M. server.Server actividadServer
+INFORMACIÓN: [ESTADO DEL SERVIDOR HORA ]:
+| Clientes conectados: 1 | Tiempo activo: 60s | Último mensaje: (Público)  [usuarioPrueba]: a
+oct 16, 2025 8:51:48 P. M. server.Server conexion
+INFORMACIÓN: Usuario conectado: usuarioTest | Activos: 2
+oct 16, 2025 8:51:56 P. M. server.ClientThread run
+INFORMACIÓN: (Público) [20:51 usuarioTest]: model.Mensaje@64c9afa9
+oct 16, 2025 8:52:02 P. M. server.ClientThread run
+INFORMACIÓN: (Privado) [20:52 usuarioTest]: model.Mensaje@767ef134
+oct 16, 2025 8:52:12 P. M. server.Server actividadServer
+INFORMACIÓN: [ESTADO DEL SERVIDOR HORA ]:
+| Clientes conectados: 2 | Tiempo activo: 90s | Último mensaje: (Privado)  [usuarioTest]: a
+oct 16, 2025 8:57:34 P. M. server.Server actividadServer
+INFORMACIÓN: [ESTADO DEL SERVIDOR 20:57 ]:
+| Clientes conectados: 0 | Tiempo activo: 0s | Último mensaje: Ninguno
+oct 16, 2025 8:57:44 P. M. server.Server conexion
+INFORMACIÓN: Usuario conectado: test1 | Activos: 1
+oct 16, 2025 8:57:55 P. M. server.Server conexion
+INFORMACIÓN: Usuario conectado: tester | Activos: 2
+oct 16, 2025 8:57:59 P. M. server.ClientThread run
+INFORMACIÓN: Usuario tester se desconectó
+oct 16, 2025 8:57:59 P. M. server.Server desconexion
+INFORMACIÓN: Usuario desconectado: tester | Activos: 1
+oct 16, 2025 8:58:04 P. M. server.Server actividadServer
+INFORMACIÓN: [ESTADO DEL SERVIDOR 20:58 ]:
+| Clientes conectados: 1 | Tiempo activo: 30s | Último mensaje: Ninguno
+oct 16, 2025 8:58:16 P. M. server.ClientThread run
+GRAVE: [ERROR CON EL CLIENTE (test1): Connection reset
+oct 16, 2025 8:58:16 P. M. server.Server desconexion
+INFORMACIÓN: Usuario desconectado: test1 | Activos: 0
+oct 16, 2025 8:58:34 P. M. server.Server actividadServer
+INFORMACIÓN: [ESTADO DEL SERVIDOR 20:58 ]:
+| Clientes conectados: 0 | Tiempo activo: 60s | Último mensaje: Ninguno
+oct 16, 2025 8:59:04 P. M. server.Server actividadServer
+INFORMACIÓN: [ESTADO DEL SERVIDOR 20:59 ]:
+| Clientes conectados: 0 | Tiempo activo: 90s | Último mensaje: Ninguno
+oct 16, 2025 9:03:42 P. M. server.Server actividadServer
+INFORMACIÓN: [ 21:03] ESTADO DEL SERVIDOR:
+| Clientes conectados: 0 | Tiempo activo: 0s | Último mensaje: Ninguno
+oct 16, 2025 9:03:46 P. M. server.Server conexion
+INFORMACIÓN: Usuario conectado: alex | Activos: 1
+oct 16, 2025 9:04:02 P. M. server.Server conexion
+INFORMACIÓN: Usuario conectado: hayden | Activos: 2
+oct 16, 2025 9:04:11 P. M. server.ClientThread run
+INFORMACIÓN: (Público) [21:04 @hayden]: model.Mensaje@498b63c0
+oct 16, 2025 9:04:12 P. M. server.Server actividadServer
+INFORMACIÓN: [ 21:04] ESTADO DEL SERVIDOR:
+| Clientes conectados: 2 | Tiempo activo: 30s | Último mensaje: (Público)  [hayden]: holaa
+oct 16, 2025 9:04:21 P. M. server.ClientThread run
+INFORMACIÓN: (Privado) [21:04 @hayden]: model.Mensaje@53043c4e
+oct 16, 2025 9:04:42 P. M. server.Server actividadServer
+INFORMACIÓN: [ 21:04] ESTADO DEL SERVIDOR:
+| Clientes conectados: 2 | Tiempo activo: 60s | Último mensaje: (Privado)  [hayden]: Holi
+oct 16, 2025 9:05:12 P. M. server.Server actividadServer
+INFORMACIÓN: [ 21:05] ESTADO DEL SERVIDOR:
+| Clientes conectados: 2 | Tiempo activo: 90s | Último mensaje: (Privado)  [hayden]: Holi
+oct 16, 2025 9:05:42 P. M. server.Server actividadServer
+INFORMACIÓN: [ 21:05] ESTADO DEL SERVIDOR:
+| Clientes conectados: 2 | Tiempo activo: 120s | Último mensaje: (Privado)  [hayden]: Holi
+oct 16, 2025 9:06:12 P. M. server.Server actividadServer
+INFORMACIÓN: [ 21:06] ESTADO DEL SERVIDOR:
+| Clientes conectados: 2 | Tiempo activo: 150s | Último mensaje: (Privado)  [hayden]: Holi
+oct 16, 2025 9:06:42 P. M. server.Server actividadServer
+INFORMACIÓN: [ 21:06] ESTADO DEL SERVIDOR:
+| Clientes conectados: 2 | Tiempo activo: 180s | Último mensaje: (Privado)  [hayden]: Holi
+oct 16, 2025 9:07:12 P. M. server.Server actividadServer
+INFORMACIÓN: [ 21:07] ESTADO DEL SERVIDOR:
+| Clientes conectados: 2 | Tiempo activo: 210s | Último mensaje: (Privado)  [hayden]: Holi
+oct 16, 2025 9:07:42 P. M. server.Server actividadServer
+INFORMACIÓN: [ 21:07] ESTADO DEL SERVIDOR:
+| Clientes conectados: 2 | Tiempo activo: 240s | Último mensaje: (Privado)  [hayden]: Holi
+oct 16, 2025 9:08:12 P. M. server.Server actividadServer
+INFORMACIÓN: [ 21:08] ESTADO DEL SERVIDOR:
+| Clientes conectados: 2 | Tiempo activo: 270s | Último mensaje: (Privado)  [hayden]: Holi
+oct 16, 2025 9:08:42 P. M. server.Server actividadServer
+INFORMACIÓN: [ 21:08] ESTADO DEL SERVIDOR:
+| Clientes conectados: 2 | Tiempo activo: 300s | Último mensaje: (Privado)  [hayden]: Holi
+oct 16, 2025 9:09:12 P. M. server.Server actividadServer
+INFORMACIÓN: [ 21:09] ESTADO DEL SERVIDOR:
+| Clientes conectados: 2 | Tiempo activo: 330s | Último mensaje: (Privado)  [hayden]: Holi
+oct 16, 2025 9:09:36 P. M. server.Server actividadServer
+INFORMACIÓN:  [21:09] ESTADO DEL SERVIDOR:
+| Clientes conectados: 0 | Tiempo activo: 0s | Último mensaje: Ninguno
+oct 16, 2025 9:09:49 P. M. server.Server conexion
+INFORMACIÓN: Usuario conectado: hayden | Activos: 1
+oct 16, 2025 9:10:06 P. M. server.Server actividadServer
+INFORMACIÓN:  [21:10] ESTADO DEL SERVIDOR:
+| Clientes conectados: 1 | Tiempo activo: 30s | Último mensaje: Ninguno
+oct 16, 2025 9:10:07 P. M. server.Server conexion
+INFORMACIÓN: Usuario conectado: alex | Activos: 2
+oct 16, 2025 9:10:15 P. M. server.ClientThread run
+INFORMACIÓN: (Público) [21:10 @alex]: model.Mensaje@498b63c0
+oct 16, 2025 9:10:26 P. M. server.ClientThread run
+INFORMACIÓN: (Privado) [21:10De @alex]: model.Mensaje@53043c4e
+oct 16, 2025 9:10:33 P. M. server.ClientThread run
+GRAVE: [21:10] ERROR CON EL CLIENTE (hayden): Connection reset
+oct 16, 2025 9:10:33 P. M. server.Server desconexion
+INFORMACIÓN: Usuario desconectado: hayden | Activos: 1
+oct 16, 2025 9:10:35 P. M. server.ClientThread run
+GRAVE: [21:10] ERROR CON EL CLIENTE (alex): Connection reset
+oct 16, 2025 9:10:35 P. M. server.Server desconexion
+INFORMACIÓN: Usuario desconectado: alex | Activos: 0
+oct 16, 2025 9:10:36 P. M. server.Server actividadServer
+INFORMACIÓN:  [21:10] ESTADO DEL SERVIDOR:
+| Clientes conectados: 0 | Tiempo activo: 60s | Último mensaje: (Privado)  [alex]: Pssst
+oct 16, 2025 9:11:06 P. M. server.Server actividadServer
+INFORMACIÓN:  [21:11] ESTADO DEL SERVIDOR:
+| Clientes conectados: 0 | Tiempo activo: 90s | Último mensaje: (Privado)  [alex]: Pssst
+oct 16, 2025 9:11:36 P. M. server.Server actividadServer
+INFORMACIÓN:  [21:11] ESTADO DEL SERVIDOR:
+| Clientes conectados: 0 | Tiempo activo: 120s | Último mensaje: (Privado)  [alex]: Pssst
+oct 16, 2025 9:12:06 P. M. server.Server actividadServer
+INFORMACIÓN:  [21:12] ESTADO DEL SERVIDOR:
+| Clientes conectados: 0 | Tiempo activo: 150s | Último mensaje: (Privado)  [alex]: Pssst
+oct 16, 2025 9:12:36 P. M. server.Server actividadServer
+INFORMACIÓN:  [21:12] ESTADO DEL SERVIDOR:
+| Clientes conectados: 0 | Tiempo activo: 180s | Último mensaje: (Privado)  [alex]: Pssst

@@ -7,6 +7,8 @@ import model.Mensaje;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -254,7 +256,7 @@ public class Client extends JFrame implements ActionListener
 		});
 	}
 
-	// Actualiza la loista de clientes conectados en el ComboBox
+	// Actualiza la lista de clientes conectados en el ComboBox
 	public void actualizarClientes(List<String> clientes) 
 	{
 		List<String> clientesFiltrados = new ArrayList<>(clientes);
@@ -278,7 +280,7 @@ public class Client extends JFrame implements ActionListener
 		if (chkPrivado.isSelected()) // Si el mensaje es privado
 		{
 			mensaje = new Mensaje(txtMensaje.getText(), txtUsuario.getText(), String.valueOf(clientes.getSelectedItem()));
-			mostrarMensaje("Privado", "Yo @" + mensaje.getDestinatario(), txtMensaje.getText());
+			mostrarMensaje("Privado", "Yo para @" + mensaje.getDestinatario(), txtMensaje.getText());
 		} 
 		else // Si es publico
 		{
@@ -294,7 +296,7 @@ public class Client extends JFrame implements ActionListener
 	// Muestra el mensaje
 	public void mostrarMensaje(String tipo, String remitente, String contenido) 
 	{
-		areaChat.append("(" + tipo + ") [@" + remitente + "]: " + contenido + "\n\n");
+		areaChat.append("(" + tipo + ") [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))+" @" + remitente + "]: " + contenido + "\n\n");
 	}
 
 	// Desconecta el cliente

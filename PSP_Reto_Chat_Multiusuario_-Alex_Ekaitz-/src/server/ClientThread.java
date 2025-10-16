@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 import logger.GeneraLog;
 import model.Mensaje;
@@ -67,27 +69,27 @@ public class ClientThread extends Thread
             	if ("mensaje_publico".equals(mensaje.getTipo())) // Si el menasaje es publico
             	{
             		server.enviarMensajePublico(mensaje);
-            		GeneraLog.getLogger().info("(Público) [" + usuario + "]: " + mensaje);
+            		GeneraLog.getLogger().info("(Público) [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + " @" + usuario + "]: " + mensaje);
             		server.setUltimoMensaje(mensaje);
                 } 
             	else if ("mensaje_privado".equals(mensaje.getTipo())) // Si el menasaje es privado
                 {
             		server.enviarMensajePrivado(mensaje);
-            		GeneraLog.getLogger().info("(Privado) [" + usuario + "]: " + mensaje);
+            		GeneraLog.getLogger().info("(Privado) [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "De @" + usuario + "]: " + mensaje);
             		server.setUltimoMensaje(mensaje);
                 }
             	else if ("respuesta_server".equals(mensaje.getTipo()) && "DESCONEXION".equals(mensaje.getContenido())) // Si el menasaje es de desconexion
                 {
-                    System.out.println("Usuario " + usuario + " se desconectó");
-                    GeneraLog.getLogger().info("Usuario " + usuario + " se desconectó");
+                    System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] El usuario " + usuario + " se desconectó.");
+                    GeneraLog.getLogger().info(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] El usuario " + usuario + " se desconectó.");
                     break;
                 }
             }
         } 
         catch (IOException | ClassNotFoundException e) 
         {
-            System.err.println("[ERROR CON EL CLIENTE (" + usuario + "): " + e.getMessage());
-            GeneraLog.getLogger().severe("[ERROR CON EL CLIENTE (" + usuario + "): " + e.getMessage());
+            System.err.println("[" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] ERROR CON EL CLIENTE (" + usuario + "): " + e.getMessage());
+            GeneraLog.getLogger().severe("[" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] ERROR CON EL CLIENTE (" + usuario + "): " + e.getMessage());
         } 
         
         finally 
