@@ -1,0 +1,54 @@
+oct 16, 2025 1:38:34 P. M. server.Server actividadServer
+INFORMACIÓN: Estado Servidor | Clientes conectados: 0 | Tiempo activo: 0s | Último mensaje: Ninguno
+oct 16, 2025 1:38:44 P. M. server.Server conexion
+INFORMACIÓN: Usuario conectado: A | Activos: 1
+oct 16, 2025 1:38:53 P. M. server.Server conexion
+INFORMACIÓN: Usuario conectado: B | Activos: 2
+oct 16, 2025 1:39:04 P. M. server.Server actividadServer
+INFORMACIÓN: Estado Servidor | Clientes conectados: 2 | Tiempo activo: 30s | Último mensaje: Ninguno
+oct 16, 2025 1:39:27 P. M. server.ClientThread run
+INFORMACIÓN: (Privado) [A]: model.Mensaje@3ebbf499
+oct 16, 2025 1:39:31 P. M. server.ClientThread run
+INFORMACIÓN: (Público) [A]: model.Mensaje@475cb5d6
+oct 16, 2025 1:39:34 P. M. server.Server actividadServer
+INFORMACIÓN: Estado Servidor | Clientes conectados: 2 | Tiempo activo: 60s | Último mensaje: (Público)  [A]: BBBBBBBBBBBBBB
+oct 16, 2025 1:40:04 P. M. server.Server actividadServer
+INFORMACIÓN: Estado Servidor | Clientes conectados: 2 | Tiempo activo: 90s | Último mensaje: (Público)  [A]: BBBBBBBBBBBBBB
+oct 16, 2025 1:40:10 P. M. server.ClientThread run
+INFORMACIÓN: (Privado) [B]: model.Mensaje@53037dff
+oct 16, 2025 1:40:19 P. M. server.ClientThread run
+INFORMACIÓN: (Público) [B]: model.Mensaje@3d17ca60
+oct 16, 2025 1:40:34 P. M. server.Server actividadServer
+INFORMACIÓN: Estado Servidor | Clientes conectados: 2 | Tiempo activo: 120s | Último mensaje: (Público)  [B]: SOY B ENVIANDO A TODOS
+oct 16, 2025 1:40:39 P. M. server.ClientThread run
+INFORMACIÓN: Usuario A se desconectó
+oct 16, 2025 1:40:39 P. M. server.Server desconexion
+INFORMACIÓN: Usuario desconectado: A | Activos: 1
+oct 16, 2025 1:40:40 P. M. server.ClientThread run
+INFORMACIÓN: Usuario B se desconectó
+oct 16, 2025 1:40:40 P. M. server.Server desconexion
+INFORMACIÓN: Usuario desconectado: B | Activos: 0
+oct 16, 2025 1:41:04 P. M. server.Server actividadServer
+INFORMACIÓN: Estado Servidor | Clientes conectados: 0 | Tiempo activo: 150s | Último mensaje: (Público)  [B]: SOY B ENVIANDO A TODOS
+oct 16, 2025 1:41:34 P. M. server.Server actividadServer
+INFORMACIÓN: Estado Servidor | Clientes conectados: 0 | Tiempo activo: 180s | Último mensaje: (Público)  [B]: SOY B ENVIANDO A TODOS
+oct 16, 2025 1:42:16 P. M. server.Server actividadServer
+INFORMACIÓN: [ESTADO DEL SERVIDOR]/n| Clientes conectados: 0 | Tiempo activo: 0s | Último mensaje: Ninguno
+oct 16, 2025 1:42:37 P. M. server.Server actividadServer
+INFORMACIÓN: [ESTADO DEL SERVIDOR]
+| Clientes conectados: 0 | Tiempo activo: 0s | Último mensaje: Ninguno
+oct 16, 2025 1:43:07 P. M. server.Server actividadServer
+INFORMACIÓN: [ESTADO DEL SERVIDOR]
+| Clientes conectados: 0 | Tiempo activo: 30s | Último mensaje: Ninguno
+oct 16, 2025 1:44:12 P. M. server.Server actividadServer
+INFORMACIÓN: [ESTADO DEL SERVIDOR 1760615052059 ]:
+| Clientes conectados: 0 | Tiempo activo: 0s | Último mensaje: Ninguno
+oct 16, 2025 1:44:42 P. M. server.Server actividadServer
+INFORMACIÓN: [ESTADO DEL SERVIDOR 1760615082059 ]:
+| Clientes conectados: 0 | Tiempo activo: 30s | Último mensaje: Ninguno
+oct 16, 2025 1:45:12 P. M. server.Server actividadServer
+INFORMACIÓN: [ESTADO DEL SERVIDOR 1760615112059 ]:
+| Clientes conectados: 0 | Tiempo activo: 60s | Último mensaje: Ninguno
+oct 16, 2025 1:45:42 P. M. server.Server actividadServer
+INFORMACIÓN: [ESTADO DEL SERVIDOR 1760615142058 ]:
+| Clientes conectados: 0 | Tiempo activo: 90s | Último mensaje: Ninguno

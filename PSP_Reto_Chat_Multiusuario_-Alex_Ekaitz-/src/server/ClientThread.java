@@ -103,7 +103,7 @@ public class ClientThread extends Thread
             catch (IOException e) 
             {
                 e.printStackTrace();
-                // System.err.println("[ERROR CERRANDO EL SOCKET]: " + e.getMessage()); (ClientThread) Linea: 104
+                // System.err.println("[ERROR CERRANDO EL SOCKET]: " + e.getMessage());
                 GeneraLog.getLogger().warning("[ERROR CERRANDO EL SOCKET]: " + e.getMessage());
             }
         }
@@ -119,7 +119,7 @@ public class ClientThread extends Thread
     	catch (IOException e) 
     	{
 			e.printStackTrace();
-			// System.err.println("[ERROR ENVIANDO MENSAJE]: " + e.getMessage()); (ClientThread) Linea: 121
+			// System.err.println("[ERROR ENVIANDO MENSAJE]: " + e.getMessage()); 
 			GeneraLog.getLogger().warning("[ERROR ENVIANDO MENSAJE]: " + e.getMessage());
 		}
     }

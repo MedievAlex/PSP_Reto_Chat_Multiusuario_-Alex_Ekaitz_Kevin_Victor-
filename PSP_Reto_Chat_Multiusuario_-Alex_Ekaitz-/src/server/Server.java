@@ -115,7 +115,7 @@ public class Server
 	{ 
 		int clientesConectados = clientes.size();
 		long tiempoActivo = System.currentTimeMillis() - inicioServidor;
-		String log = "Estado Servidor | Clientes conectados: " + clientesConectados 
+		String log = "[ESTADO DEL SERVIDOR " + "HORA" + " ]:\n| Clientes conectados: " + clientesConectados 
 				+ " | Tiempo activo: " + (tiempoActivo / 1000) + "s" 
 				+ " | Último mensaje: " + (ultimoMensaje != null ? "(" + ("mensaje_publico".equals(ultimoMensaje.getTipo()) ? "Público" : "Privado") + ") " 
 				+ " [" + ultimoMensaje.getRemitente() + "]: " + ultimoMensaje.getContenido() : "Ninguno");
