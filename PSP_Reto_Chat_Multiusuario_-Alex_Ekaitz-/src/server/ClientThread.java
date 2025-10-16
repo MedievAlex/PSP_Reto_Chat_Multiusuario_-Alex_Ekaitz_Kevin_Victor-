@@ -9,13 +9,15 @@ import logger.GeneraLog;
 import model.Mensaje;
 
 public class ClientThread extends Thread {
-    private Socket socket;
-    private Server server;
-    private String usuario;
-    private ObjectOutputStream salida;
-    private ObjectInputStream entrada;
-    private boolean conectado = false;
+    
+	private Socket socket; // Shocket del cliente
+    private Server server; // Servidor al que se accede
+    private String usuario; // Nombre de usuario del cliente
+    private ObjectOutputStream salida;  
+    private ObjectInputStream entrada;  
+    private boolean conectado = false; // Estado de conexion
 
+    // Constructor del hilo
     public ClientThread(Socket socket, Server server) {
         this.socket = socket;
         this.server = server;
@@ -29,19 +31,19 @@ public class ClientThread extends Thread {
         	salida = new ObjectOutputStream(socket.getOutputStream());
         	entrada = new ObjectInputStream(socket.getInputStream());
         	
-            usuario = (String) entrada.readObject();
+            usuario = (String) entrada.readObject(); // Obtiene el nombre de usuario
 
-            if (server.getClientesActivos().size() >= server.getLimite()) {
+            if (server.getClientesActivos().size() >= server.getLimite()) { // Mensaje de error si el servidor esta lleno
                 salida.writeObject(new Mensaje("ERROR_LLENO"));
                 return;
             }
 
-            if (server.getClientesActivos().contains(usuario)) {
+            if (server.getClientesActivos().contains(usuario)) { // Mensaje de error si ya hay un cliente con ese usuario
                 salida.writeObject(new Mensaje("ERROR_DUPLICADO"));
                 return;
             }
             
-            if ("Server".equalsIgnoreCase(usuario)) {
+            if ("Server".equalsIgnoreCase(usuario)) { // Mensaje de error si es un nombre de usuario reservado EJ.: servidor
                 salida.writeObject(new Mensaje("ERROR_RESERVADO"));
                 return;
             }

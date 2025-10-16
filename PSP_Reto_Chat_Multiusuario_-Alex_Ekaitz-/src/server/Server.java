@@ -24,35 +24,35 @@ public class Server {
 	private long inicioServidor; // Momento de inicio
 	private Mensaje ultimoMensaje; // Registro de ultimo mensaje enviado
 
-	public static void main(String[] args) {
-		Server server = new Server();
+	public static void main(String[] args) { // Crea e inicia el servidor
+		Server server = new Server(); 
 		server.iniciar();
 	}
 
-	public void iniciar() {
-		try (ServerSocket serverSocket = new ServerSocket(PUERTO)) {
+	public void iniciar() { 
+		try (ServerSocket serverSocket = new ServerSocket(PUERTO)) { // Cierra automaticamente el recurso al finalizar
 			System.out.println("Servidor iniciado. Esperando conexiones en el puerto " + PUERTO + "...");
-			inicioServidor = System.currentTimeMillis();
+			inicioServidor = System.currentTimeMillis(); // Registra el momento de inicio del servidor
 			
 			Timer timer = new Timer();
 			
-			timer.scheduleAtFixedRate(new TimerTask() {
+			timer.scheduleAtFixedRate(new TimerTask() { // Muestra cada X tiempo un mensaje en el servidor
 			    public void run() {
 			        actividadServer();
 			    }
 			}, 0, tiempoMostrar * 1000);
 			
-			while (true) {
-				Socket clienteSocket = serverSocket.accept();
+			while (true) { // Mantiene el servidor abierto
+				Socket clienteSocket = serverSocket.accept(); // Shocket para el cliente entrante
 				System.out.println("Nueva conexión entrante...");
 
-				hilo = new ClientThread(clienteSocket, this);
-				hilo.start();
+				hilo = new ClientThread(clienteSocket, this); // Crea un hilo por el cliente entrante
+				hilo.start(); // Inicia el hilo
 			}
 
-		} catch (IOException ex) {
-			System.err.println("Error en el servidor: " + ex.getMessage());
-			GeneraLog.getLogger().severe("Error en servidor: " + ex.getMessage());
+		} catch (IOException ex) { // Gestiona los posibles errores de los shocket del servidor y cliente
+			System.err.println("[ERROR EN EL SERVIDOR]: " + ex.getMessage());
+			GeneraLog.getLogger().severe("[ERROR EN EL SERVIDOR]: " + ex.getMessage());
 		}
 	}
 
@@ -96,14 +96,17 @@ public class Server {
 		enviarMensajePublico(new Mensaje("Cliente " + usuario + (conectado ? " conectado." : " desconectado."), "Server"));
 	}
 	
-	public void actividadServer() {
+	public void actividadServer() { // Mensaje de informacion sobre el estado del servidor
 		int clientesConectados = clientes.size();
 		long tiempoActivo = System.currentTimeMillis() - inicioServidor;
-		String log = "Estado Servidor | Clientes conectados: " + clientesConectados + " | Tiempo activo: " + (tiempoActivo / 1000) + "s | Último mensaje: " + (ultimoMensaje != null ? "(" + ("mensaje_publico".equals(ultimoMensaje.getTipo()) ? "Público" : "Privado") + ") [" + ultimoMensaje.getRemitente() + "]: " + ultimoMensaje.getContenido() : "Ninguno");
+		String log = "Estado Servidor | Clientes conectados: " + clientesConectados 
+				+ " | Tiempo activo: " + (tiempoActivo / 1000) + "s" 
+				+ " | Último mensaje: " + (ultimoMensaje != null ? "(" + ("mensaje_publico".equals(ultimoMensaje.getTipo()) ? "Público" : "Privado") + ") " 
+				+ " [" + ultimoMensaje.getRemitente() + "]: " + ultimoMensaje.getContenido() : "Ninguno");
 		
-		System.out.println(log);
+		System.out.println(log); // Muestra el mensaje
 		
-		GeneraLog.getLogger().info(log);
+		GeneraLog.getLogger().info(log); // Escrube el mensaje en el logger
 	}
 	
 	public synchronized void setUltimoMensaje(Mensaje mensaje) {
