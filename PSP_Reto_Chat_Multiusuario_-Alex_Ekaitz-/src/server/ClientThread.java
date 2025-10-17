@@ -104,8 +104,7 @@ public class ClientThread extends Thread
             } 
             catch (IOException e) 
             {
-                e.printStackTrace();
-                // System.err.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] [ERROR CERRANDO EL SOCKET]: " + e.getMessage());
+                System.err.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] [ERROR CERRANDO EL SOCKET]: " + e.getMessage());
                 GeneraLog.getLogger().warning(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] ERROR CERRANDO EL SOCKET]: " + e.getMessage());
             }
         }
@@ -120,8 +119,7 @@ public class ClientThread extends Thread
 		} 
     	catch (IOException e) 
     	{
-			e.printStackTrace();
-			// System.err.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] [ERROR ENVIANDO MENSAJE]: " + e.getMessage()); 
+			System.err.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] [ERROR ENVIANDO MENSAJE]: " + e.getMessage()); 
 			GeneraLog.getLogger().warning(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] [ERROR ENVIANDO MENSAJE]: " + e.getMessage());
 		}
     }

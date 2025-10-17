@@ -18,37 +18,25 @@ public class Client extends JFrame implements ActionListener
 
 	// [ VARIABLES ]
 	private ConexionThread hilo;
-
-	// Ventana: JPanel
 	private JPanel panelSuperior;
-	private JPanel panelInferior;
-	
-	// Ventana: JLabel
 	private JLabel labelIp;
-	private JLabel labelPuerto;
-	private JLabel labelUsuario;
-	private JLabel lblEstado;
-	private JLabel lblContador;
-	private JLabel labelPara;
-	
-	// Ventana: JTextField
 	private JTextField txtIp;
+	private JLabel labelPuerto;
 	private JTextField txtPuerto;
-	private JTextField txtUsuario;	
-	private JTextField txtMensaje;
-	
-	// Ventana: JButton
+	private JLabel labelUsuario;
+	private JTextField txtUsuario;
 	private JButton btnConectar;
 	private JButton btnDesconectar;
-	private JButton btnEnviar;
-	
-	// Ventana: JTextArea
+	private JLabel lblEstado;
+	private JLabel lblContador;
 	private JTextArea areaChat;
-	
-	// Ventana: Complejos
-	private JScrollPane scroll;	
+	private JScrollPane scroll;
+	private JPanel panelInferior;
 	private JCheckBox chkPrivado;
+	private JLabel labelPara;
 	private JComboBox<String> clientes;
+	private JTextField txtMensaje;
+	private JButton btnEnviar;
 	
 	public static void main(String[] args) 
 	{
@@ -296,7 +284,14 @@ public class Client extends JFrame implements ActionListener
 	// Muestra el mensaje
 	public void mostrarMensaje(String tipo, String remitente, String contenido) 
 	{
-		areaChat.append("(" + tipo + ") [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))+" @" + remitente + "]: " + contenido + "\n\n");
+		if(tipo.equals("Privado")) 
+		{
+			areaChat.append("(" + tipo + ") [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))+" De @" + remitente + "]: " + contenido + "\n\n");
+		}
+		else 
+		{
+			areaChat.append("(" + tipo + ") [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))+" @" + remitente + "]: " + contenido + "\n\n");
+		}		
 	}
 
 	// Desconecta el cliente

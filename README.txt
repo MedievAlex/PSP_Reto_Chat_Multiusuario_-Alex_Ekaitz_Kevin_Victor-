@@ -6,14 +6,14 @@ QUEHACERES Y PREGUNTAS
 
 [ X ] Mirar al cerrar la ventana sin desconectarse. Mantiene el usuario impidiendo conectarse con ese nombre aun que no esté conectado.
 
-[  ] SUGERENCIA COMENTADA (ClientThread) Linea: 106.
+[ X ] SUGERENCIA COMENTADA (ClientThread) Linea: 106.
 
-[  ] SUGERENCIA COMENTADA (ClientThread) Linea: 122.
+[ X ] SUGERENCIA COMENTADA (ClientThread) Linea: 122.
 
 [ X ] Trabajo extra: mostrar hora de estado del servidor (Server) Linea: 118. (Alex)
 
 [ X ] Trabajo extra: mostrar hora de envio del mensaje (Client) Lineas: 274-298. (Alex)
 
-[  ] Trabajo extra: Falta modificar el formato del mensaje privado que le llega al cliente. (Alex)
+[ X ] Trabajo extra: Falta modificar el formato del mensaje privado que le llega al cliente. (Alex)
 
 
