@@ -13,3 +13,9 @@ QUEHACERES Y PREGUNTAS
 [ ] Trabajo extra: mostrar hora de estado del servidor (Server) Linea: 118. (Alex)
 
 [ ] Trabajo extra: mostrar hora de envio del mensaje (Client) Lineas: 274-298. (Alex)
+
+[ ] Mensaje en el log to string.
+
+[ ] Guardar la lista de mensajes.
+
+[ ] Y ya esta.
