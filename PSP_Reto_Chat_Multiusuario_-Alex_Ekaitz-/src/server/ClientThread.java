@@ -67,23 +67,21 @@ public class ClientThread extends Thread
 			while ((mensaje = (Mensaje) entrada.readObject()) != null)
 			{
 				if ("mensaje_publico".equals(mensaje.getTipo())) // Si el mensaje es publico
-					{
-						server.enviarMensajePublico(mensaje);
-						GeneraLog.getLogger().info("(Público) [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + " @" + usuario + "]: " + mensaje);
-						server.setUltimoMensaje(mensaje);
-					}
+				{
+					server.enviarMensajePublico(mensaje);
+					GeneraLog.getLogger().info("(Público) [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + " @" + usuario + "]: " + mensaje);
+				}
 				else if ("mensaje_privado".equals(mensaje.getTipo())) // Si el mensaje es privado
-					{
-						server.enviarMensajePrivado(mensaje);
-						GeneraLog.getLogger().info("(Privado) [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + " @" + usuario + "]: " + mensaje);
-						server.setUltimoMensaje(mensaje);
-					}
+				{
+					server.enviarMensajePrivado(mensaje);
+					GeneraLog.getLogger().info("(Privado) [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + " @" + usuario + "]: " + mensaje);
+				}
 				else if ("respuesta_server".equals(mensaje.getTipo()) && "DESCONEXION".equals(mensaje.getContenido())) // Si el mensaje es de desconexion
-					{
-						System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] El usuario " + usuario + " se desconectó.");
-						GeneraLog.getLogger().info(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] El usuario " + usuario + " se desconectó.");
-						break;
-					}
+				{
+					System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] El usuario " + usuario + " se desconectó.");
+					GeneraLog.getLogger().info(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] El usuario " + usuario + " se desconectó.");
+					break;
+				}
 			}
 		}
 		catch (IOException | ClassNotFoundException e)
@@ -123,7 +121,7 @@ public class ClientThread extends Thread
 		}
 	}
 
-// [ GETTER Y SETTER NECESARIOS ]
+	// [ GETTER NECESARIO ]
 	public String getUsuario()
 	{
 		return usuario;

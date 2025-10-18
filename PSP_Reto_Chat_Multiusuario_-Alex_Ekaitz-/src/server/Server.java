@@ -10,8 +10,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import logger.GeneraLog;
 import model.Mensaje;
@@ -27,7 +25,7 @@ public class Server
 	private Map<String, ClientThread> clientes = Collections.synchronizedMap(new HashMap<>()); // Mapa sincronizado de clientes con sus hilos
 	private Map<String, List<Mensaje>> mensajes = Collections.synchronizedMap(new HashMap<>()); // Mapa sincronizado de clientes con sus mensajes
 	private long inicioServidor; // Momento de inicio
-	private Mensaje ultimoMensaje; // Registro de ultimo mensaje enviado
+	private MonitorThread monitor; // Hilo de monitoreo
 
 	// [ MAIN ]
 	public static void main(String[] args)
@@ -45,16 +43,9 @@ public class Server
 			System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Servidor iniciado. Esperando conexiones en el puerto " + PUERTO + "...");
 			inicioServidor = System.currentTimeMillis(); // Registra el momento de inicio del servidor
 
-			Timer timer = new Timer();
-
-			// Muestra cada X tiempo un mensaje en el servidor
-			timer.scheduleAtFixedRate(new TimerTask()
-			{
-				public void run()
-				{
-					actividadServer();
-				}
-			}, 0, tiempoMostrar * 1000);
+			// Crear e iniciar el hilo de monitoreo
+			monitor = new MonitorThread(tiempoMostrar, inicioServidor);
+			monitor.start();
 
 			// Mantiene el servidor abierto
 			while (true)
@@ -65,7 +56,6 @@ public class Server
 				hilo = new ClientThread(clienteSocket, this); // Crea un hilo por el cliente entrante
 				hilo.start(); // Inicia el hilo
 			}
-
 		}
 		catch (IOException ex) // Gestiona los posibles errores de los shocket del servidor y cliente
 		{
@@ -80,6 +70,12 @@ public class Server
 		System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Usuario conectado: " + usuario + " | Activos: " + clientes.size());
 		GeneraLog.getLogger().info("Usuario conectado: " + usuario + " | Activos: " + clientes.size());
 		actualizarClientes(true, usuario);
+
+		// Actualizar contador en el monitor
+		if (monitor != null)
+		{
+			monitor.setClientesConectados(clientes.size());
+		}
 	}
 
 	public synchronized void desconexion(String usuario)
@@ -88,6 +84,12 @@ public class Server
 		System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Usuario desconectado: " + usuario + " | Activos: " + clientes.size());
 		GeneraLog.getLogger().info("Usuario desconectado: " + usuario + " | Activos: " + clientes.size());
 		actualizarClientes(false, usuario);
+
+		// Actualizar contador en el monitor
+		if (monitor != null)
+		{
+			monitor.setClientesConectados(clientes.size());
+		}
 	}
 
 	public synchronized List<String> getClientesActivos()
@@ -110,13 +112,15 @@ public class Server
 				}
 			}
 
-			if (!"Server".equals(mensaje.getRemitente()) && !"lista_clientes".equals(mensaje.getTipo()))
+			if (monitor != null && !"Server".equals(mensaje.getRemitente()) && !"lista_clientes".equals(mensaje.getTipo()))
 			{
+				monitor.setUltimoMensaje(mensaje);
+
 				System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] MENSAJE: "
-							+ "(Público) [" + mensaje.getRemitente() + "]: " + mensaje.getContenido());
+							+ "(Público) [@" + mensaje.getRemitente() + "]: " + mensaje.getContenido());
 
 				GeneraLog.getLogger().info(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] MENSAJE: "
-							+ "(Público) [" + mensaje.getRemitente() + "]: " + mensaje.getContenido());
+							+ "(Público) [@" + mensaje.getRemitente() + "]: " + mensaje.getContenido());
 			}
 	}
 
@@ -133,11 +137,16 @@ public class Server
 			destinatario.enviarMensaje(mensaje);
 		}
 
+		if (monitor != null)
+		{
+			monitor.setUltimoMensaje(mensaje);
+		}
+
 		System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] MENSAJE: "
-					+ "(Privado) [" + mensaje.getRemitente() + "]: " + mensaje.getContenido());
+					+ "(Privado) [De @" + mensaje.getRemitente() + " para @" + mensaje.getDestinatario() + "]: " + mensaje.getContenido());
 
 		GeneraLog.getLogger().info(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] MENSAJE: "
-					+ "(Privado) [" + mensaje.getRemitente() + "]: " + mensaje.getContenido());
+				+ "(Privado) [De @" + mensaje.getRemitente() + " para @" + mensaje.getDestinatario() + "]: " + mensaje.getContenido());
 	}
 
 	public synchronized void actualizarClientes(boolean conectado, String usuario)
@@ -147,26 +156,7 @@ public class Server
 		enviarMensajePublico(new Mensaje("Cliente " + usuario + (conectado ? " conectado." : " desconectado."), "Server"));
 	}
 
-	public void actividadServer() // Mensaje de informacion sobre el estado del servidor
-	{
-		int clientesConectados = clientes.size();
-		long tiempoActivo = System.currentTimeMillis() - inicioServidor;
-		String log = " [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] ESTADO DEL SERVIDOR:\n Clientes conectados: " + clientesConectados
-					+ " | Tiempo activo: " + (tiempoActivo / 1000) + "s"
-					+ " | Último mensaje: " + (ultimoMensaje != null ? "(" + ("mensaje_publico".equals(ultimoMensaje.getTipo()) ? "Público" : "Privado") + ") "
-					+ "[" + ultimoMensaje.getRemitente() + "]: " + ultimoMensaje.getContenido() : "Ninguno");
-
-		System.out.println(log); // Muestra la actividad
-
-		GeneraLog.getLogger().info(log); // Escribe la actividad en el logger
-	}
-
-	// [ GETTER Y SETTER NECESARIOS ]
-	public synchronized void setUltimoMensaje(Mensaje mensaje)
-	{
-		this.ultimoMensaje = mensaje;
-	}
-
+	// [ GETTER NECESARIO ]
 	public int getLimite()
 	{
 		return limite;
