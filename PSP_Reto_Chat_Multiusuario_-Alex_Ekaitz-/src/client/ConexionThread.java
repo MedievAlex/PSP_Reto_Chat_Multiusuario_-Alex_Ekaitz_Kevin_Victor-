@@ -7,9 +7,9 @@ import java.net.Socket;
 
 import model.Mensaje;
 
-public class ConexionThread extends Thread 
+public class ConexionThread extends Thread
 {
-	
+
 	// [ VARIABLES ]
 	private String ip;
 	private int puerto;
@@ -21,7 +21,7 @@ public class ConexionThread extends Thread
 	private boolean conectado;
 
 	// [ CONSTRUCTORES ]
-	public ConexionThread(String ip, int puerto, String usuario, Client cliente) 
+	public ConexionThread(String ip, int puerto, String usuario, Client cliente)
 	{
 		this.ip = ip;
 		this.puerto = puerto;
@@ -31,9 +31,9 @@ public class ConexionThread extends Thread
 	}
 
 	@Override
-	public void run() 
+	public void run()
 	{
-		try 
+		try
 		{
 			Mensaje mensaje;
 
@@ -44,105 +44,105 @@ public class ConexionThread extends Thread
 			salida.writeObject(usuario);
 			mensaje = (Mensaje) entrada.readObject();
 
-			if ("OK".equals(mensaje.getContenido())) 
+			if ("OK".equals(mensaje.getContenido()))
 			{
 				cliente.conexionExitosa();
 
-				while (conectado) 
+				while (conectado)
 				{
-					try 
+					try
 					{
 						mensaje = (Mensaje) entrada.readObject();
 
-						if ("lista_clientes".equals(mensaje.getTipo())) 
+						if ("lista_clientes".equals(mensaje.getTipo()))
 						{
 							cliente.actualizarClientes(mensaje.getClientes());
-						} 
-						else if ("mensaje_publico".equals(mensaje.getTipo())) 
+						}
+						else if ("mensaje_publico".equals(mensaje.getTipo()))
 						{
 							cliente.mostrarMensaje("Público", mensaje.getRemitente(), mensaje.getContenido());
-						} 
-						else if ("mensaje_privado".equals(mensaje.getTipo())) 
+						}
+						else if ("mensaje_privado".equals(mensaje.getTipo()))
 						{
 							cliente.mostrarMensaje("Privado", mensaje.getRemitente(), mensaje.getContenido());
 						}
-					} 
-					catch (IOException e) 
+					}
+					catch (IOException e)
 					{
-						if (conectado) 
+						if (conectado)
 						{
 							cliente.conexionFallida("Error de conexión: " + e.getMessage());
 						}
 						break;
-					} 
-					catch (ClassNotFoundException e) 
+					}
+					catch (ClassNotFoundException e)
 					{
 						cliente.conexionFallida("Error de comunicación: " + e.getMessage());
 						break;
 					}
 				}
-			} 
-			else if ("ERROR_LLENO".equals(mensaje.getContenido())) 
+			}
+			else if ("ERROR_LLENO".equals(mensaje.getContenido()))
 			{
 				cliente.conexionFallida("Servidor lleno");
-			} 
-			else if ("ERROR_DUPLICADO".equals(mensaje.getContenido())) 
+			}
+			else if ("ERROR_DUPLICADO".equals(mensaje.getContenido()))
 			{
 				cliente.conexionFallida("Usuario ya conectado");
-			} 
-			else if ("ERROR_RESERVADO".equals(mensaje.getContenido())) 
+			}
+			else if ("ERROR_RESERVADO".equals(mensaje.getContenido()))
 			{
 				cliente.conexionFallida("Nombre de usuario inválido");
 			}
 
-		} 
-		catch (IOException | ClassNotFoundException ex) 
+		}
+		catch (IOException | ClassNotFoundException ex)
 		{
 			cliente.conexionFallida("Error de conexión: " + ex.getMessage());
-		} 
-		finally 
+		}
+		finally
 		{
 			cerrarConexion();
 		}
 	}
 
-	public void enviarMensaje(Mensaje mensaje) 
+	public void enviarMensaje(Mensaje mensaje)
 	{
-		try 
+		try
 		{
 			salida.writeObject(mensaje);
-		} 
-		catch (IOException e) 
+		}
+		catch (IOException e)
 		{
 			cliente.conexionFallida("Error enviando mensaje: " + e.getMessage());
 		}
 	}
 
-	public synchronized void desconectar() 
+	public synchronized void desconectar()
 	{
 		conectado = false;
 
-		try 
+		try
 		{
-			if (salida != null) 
+			if (salida != null)
 			{
 				salida.writeObject(new Mensaje("DESCONEXION"));
 				salida.flush();
 			}
-			if (socket != null) 
+			if (socket != null)
 			{
 				socket.close();
 			}
-		} 
-		catch (IOException e) 
+		}
+		catch (IOException e)
 		{
-			
+
 		}
 	}
 
-	private void cerrarConexion() 
+	private void cerrarConexion()
 	{
-		try 
+		try
 		{
 			if (entrada != null)
 			{
@@ -156,10 +156,10 @@ public class ConexionThread extends Thread
 			{
 				socket.close();
 			}
-		} 
-		catch (IOException e) 
+		}
+		catch (IOException e)
 		{
-			
+
 		}
 	}
 }
