@@ -25,6 +25,7 @@ public class Server
 	private int tiempoMostrar = 30; // Tiempo entre mensajes
 	private ClientThread hilo; // Hilo para cada cliente
 	private Map<String, ClientThread> clientes = Collections.synchronizedMap(new HashMap<>()); // Mapa sincronizado de clientes con sus hilos
+	private Map<String, List<Mensaje>> mensajes = Collections.synchronizedMap(new HashMap<>()); // Mapa sincronizado de clientes con sus mensajes
 	private long inicioServidor; // Momento de inicio
 	private Mensaje ultimoMensaje; // Registro de ultimo mensaje enviado
 
@@ -38,7 +39,7 @@ public class Server
 	// [ METODOS ]
 	public void iniciar() 
 	{ 
-		// Cierra automaticamente el recurso al finalizar (Try with resouces)
+		// Cierra automaticamente el recurso al finalizar (Try with resources)
 		try (ServerSocket serverSocket = new ServerSocket(PUERTO)) 
 		{ 
 			System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Servidor iniciado. Esperando conexiones en el puerto " + PUERTO + "...");
@@ -73,36 +74,53 @@ public class Server
 		}
 	}
 
-	public synchronized void conexion(String usuario, ClientThread hilo) {
+	public synchronized void conexion(String usuario, ClientThread hilo) 
+	{
 		clientes.put(usuario, hilo);
 		System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Usuario conectado: " + usuario + " | Activos: " + clientes.size());
 		GeneraLog.getLogger().info("Usuario conectado: " + usuario + " | Activos: " + clientes.size());
 		actualizarClientes(true, usuario);
 	}
 
-	public synchronized void desconexion(String usuario) {
+	public synchronized void desconexion(String usuario) 
+	{
 		clientes.remove(usuario);
 		System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Usuario desconectado: " + usuario + " | Activos: " + clientes.size());
 		GeneraLog.getLogger().info("Usuario desconectado: " + usuario + " | Activos: " + clientes.size());
 		actualizarClientes(false, usuario);
 	}
 
-	public synchronized List<String> getClientesActivos() {
+	public synchronized List<String> getClientesActivos() 
+	{
 		return new ArrayList<>(clientes.keySet());
 	}
 	
-	public synchronized void enviarMensajePublico(Mensaje mensaje) {
-	    for (ClientThread hilo : clientes.values()) {
-	    	if (!hilo.getUsuario().equals(mensaje.getRemitente())) {
+	public synchronized void enviarMensajePublico(Mensaje mensaje) 
+	{
+		List<Mensaje> lista = mensajes.getOrDefault(mensaje.getRemitente(), new ArrayList<>()); // Obtiene la lista de mensajes y si no existe la crea
+
+		lista.add(mensaje); // Añade el mensaje a la lista existente o nueva
+		mensajes.put(mensaje.getRemitente(), lista); // Añade o reemplaza el usuario c
+		
+	    for (ClientThread hilo : clientes.values()) 
+	    {
+	    	if (!hilo.getUsuario().equals(mensaje.getRemitente())) 
+	    	{
 	            hilo.enviarMensaje(mensaje);
 	        }
 	    }
 	}
 	
-	public synchronized void enviarMensajePrivado(Mensaje mensaje) {
+	public synchronized void enviarMensajePrivado(Mensaje mensaje) 
+	{
 		ClientThread destinatario = clientes.get(mensaje.getDestinatario());
+		List<Mensaje> lista = mensajes.getOrDefault(mensaje.getRemitente(), new ArrayList<>()); // Obtiene la lista de mensajes y si no existe la crea
+
+		lista.add(mensaje); // Añade el mensaje a la lista existente o nueva
+		mensajes.put(mensaje.getRemitente(), lista); // Añade o reemplaza el usuario con la lista en el HashMap
 		
-		if (destinatario != null) {
+		if (destinatario != null) 
+		{
 			destinatario.enviarMensaje(mensaje);
 		}
 	}
@@ -117,7 +135,7 @@ public class Server
 	{ 
 		int clientesConectados = clientes.size();
 		long tiempoActivo = System.currentTimeMillis() - inicioServidor;
-		String log = " [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] ESTADO DEL SERVIDOR:\n| Clientes conectados: " + clientesConectados 
+		String log = " [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] ESTADO DEL SERVIDOR:\n Clientes conectados: " + clientesConectados 
 				+ " | Tiempo activo: " + (tiempoActivo / 1000) + "s" 
 				+ " | Último mensaje: " + (ultimoMensaje != null ? "(" + ("mensaje_publico".equals(ultimoMensaje.getTipo()) ? "Público" : "Privado") + ") " 
 				+ " [" + ultimoMensaje.getRemitente() + "]: " + ultimoMensaje.getContenido() : "Ninguno");
