@@ -7,14 +7,17 @@ import model.Mensaje;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Client extends JFrame implements ActionListener {
+public class Client extends JFrame implements ActionListener
+{
 	private static final long serialVersionUID = 1L;
 
+	// [ VARIABLES ]
 	private ConexionThread hilo;
-
 	private JPanel panelSuperior;
 	private JLabel labelIp;
 	private JTextField txtIp;
@@ -35,24 +38,30 @@ public class Client extends JFrame implements ActionListener {
 	private JTextField txtMensaje;
 	private JButton btnEnviar;
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(() -> {
-			try {
+	public static void main(String[] args)
+	{
+		EventQueue.invokeLater(() ->
+		{
+			try
+			{
 				Client frame = new Client();
 				frame.setVisible(true);
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				e.printStackTrace();
 			}
 		});
 	}
 
-	public Client() {
+	public Client()
+	{
 		setTitle("Chat Multiusuario");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(980, 550);
 		setLocationRelativeTo(null);
 
-		// PANEL SUPERIOR
+		// PANEL SUPERIOR: Izquierdo
 		panelSuperior = new JPanel(new BorderLayout());
 
 		JPanel panelIzquierdo = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
@@ -96,6 +105,7 @@ public class Client extends JFrame implements ActionListener {
 		panelIzquierdo.add(btnDesconectar);
 		panelIzquierdo.add(lblEstado);
 
+		// PANEL SUPERIOR: Derecho
 		JPanel panelDerecho = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 17));
 
 		lblContador = new JLabel("");
@@ -150,43 +160,60 @@ public class Client extends JFrame implements ActionListener {
 		getContentPane().add(panelInferior, BorderLayout.SOUTH);
 	}
 
+	// ACTION PERFORMER
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnConectar) {
-			if (txtIp.getText().isEmpty() || txtPuerto.getText().isEmpty() || txtUsuario.getText().isEmpty()) {
+	public void actionPerformed(ActionEvent e)
+	{
+		if (e.getSource() == btnConectar)
+		{
+			if (txtIp.getText().isEmpty() || txtPuerto.getText().isEmpty() || txtUsuario.getText().isEmpty())
+			{
 				JOptionPane.showMessageDialog(this, "Rellene los campos IP, Puerto y Usuario", "Atención", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 
+			areaChat.setText("");
+
 			hilo = new ConexionThread(txtIp.getText(), Integer.parseInt(txtPuerto.getText()), txtUsuario.getText(), this);
 			hilo.start();
 
-		} else if (e.getSource() == btnDesconectar) {
+		}
+		else if (e.getSource() == btnDesconectar)
+		{
 			desconectarCliente();
-		} else if (e.getSource() == btnEnviar) {
-			if (chkPrivado.isSelected() && clientes.getSelectedIndex() == -1) {
+		}
+		else if (e.getSource() == chkPrivado)
+		{
+			clientes.setEnabled(chkPrivado.isSelected());
+
+			if (!chkPrivado.isSelected())
+			{
+				clientes.setSelectedIndex(-1);
+			}
+		}
+		else if (e.getSource() == btnEnviar)
+		{
+			if (chkPrivado.isSelected() && clientes.getSelectedIndex() == -1)
+			{
 				JOptionPane.showMessageDialog(this, "Debe seleccionar un usuario", "Atención", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 
-			if (txtMensaje.getText().isEmpty()) {
+			if (txtMensaje.getText().isEmpty())
+			{
 				JOptionPane.showMessageDialog(this, "Debe introducir un mensaje", "Atención", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
-			
-			enviarMensaje();
 
-		} else if (e.getSource() == chkPrivado) {
-			clientes.setEnabled(chkPrivado.isSelected());
-			
-			if (!chkPrivado.isSelected()) {
-				clientes.setSelectedIndex(-1);
-			}
+			enviarMensaje();
 		}
 	}
 
-	public void conexionExitosa() {
-		SwingUtilities.invokeLater(() -> {
+	// Conexion correcta
+	public void conexionExitosa()
+	{
+		SwingUtilities.invokeLater(() ->
+		{
 			txtIp.setEditable(false);
 			txtPuerto.setEditable(false);
 			txtUsuario.setEditable(false);
@@ -199,8 +226,11 @@ public class Client extends JFrame implements ActionListener {
 		});
 	}
 
-	public void conexionFallida(String mensajeError) {
-		SwingUtilities.invokeLater(() -> {
+	// Problema de conexion
+	public void conexionFallida(String mensajeError)
+	{
+		SwingUtilities.invokeLater(() ->
+		{
 			JOptionPane.showMessageDialog(this, mensajeError, "Error de Conexión", JOptionPane.ERROR_MESSAGE);
 			txtIp.setEditable(true);
 			txtPuerto.setEditable(true);
@@ -215,10 +245,13 @@ public class Client extends JFrame implements ActionListener {
 		});
 	}
 
-	public void actualizarClientes(List<String> clientes) {
+	// Actualiza la lista de clientes conectados en el ComboBox
+	public void actualizarClientes(List<String> clientes)
+	{
 		List<String> clientesFiltrados = new ArrayList<>(clientes);
 
-		SwingUtilities.invokeLater(() -> {
+		SwingUtilities.invokeLater(() ->
+		{
 			lblContador.setText("Conectados: " + String.valueOf(clientes.size()));
 
 			clientesFiltrados.remove(txtUsuario.getText());
@@ -227,28 +260,44 @@ public class Client extends JFrame implements ActionListener {
 			this.clientes.setSelectedIndex(-1);
 		});
 	}
-	
-	public void enviarMensaje() {
+
+	// Mensajes enviados con el estilo
+	public void enviarMensaje()
+	{
 		Mensaje mensaje;
-		
-		if (chkPrivado.isSelected()) {
+
+		if (chkPrivado.isSelected()) // Si el mensaje es privado
+		{
 			mensaje = new Mensaje(txtMensaje.getText(), txtUsuario.getText(), String.valueOf(clientes.getSelectedItem()));
-			mostrarMensaje("Privado", "Yo -> " + mensaje.getDestinatario(), txtMensaje.getText());
-		} else {
+			mostrarMensaje("Privado", "Yo para @" + mensaje.getDestinatario(), txtMensaje.getText());
+		}
+		else // Si es publico
+		{
 			mensaje = new Mensaje(txtMensaje.getText(), txtUsuario.getText());
 			mostrarMensaje("Público", "Yo", txtMensaje.getText());
 		}
-		
+
 		hilo.enviarMensaje(mensaje);
-		
+
 		txtMensaje.setText("");
 	}
 
-	public void mostrarMensaje(String tipo, String remitente, String contenido) {
-		areaChat.append("(" + tipo + ") [" + remitente + "]: " + contenido + "\n\n");
+	// Muestra el mensaje
+	public void mostrarMensaje(String tipo, String remitente, String contenido)
+	{
+		if(tipo.equals("Privado"))
+		{
+			areaChat.append("(" + tipo + ") [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))+" De @" + remitente + "]: " + contenido + "\n\n");
+		}
+		else
+		{
+			areaChat.append("(" + tipo + ") [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))+" @" + remitente + "]: " + contenido + "\n\n");
+		}
 	}
 
-	public void desconectarCliente() {
+	// Desconecta el cliente
+	public void desconectarCliente()
+	{
 		hilo.desconectar();
 		txtIp.setEditable(true);
 		txtPuerto.setEditable(true);

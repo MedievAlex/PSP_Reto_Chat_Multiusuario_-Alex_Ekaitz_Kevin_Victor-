@@ -7,7 +7,10 @@ import java.net.Socket;
 
 import model.Mensaje;
 
-public class ConexionThread extends Thread {
+public class ConexionThread extends Thread
+{
+
+	// [ VARIABLES ]
 	private String ip;
 	private int puerto;
 	private String usuario;
@@ -17,7 +20,9 @@ public class ConexionThread extends Thread {
 	private ObjectInputStream entrada;
 	private boolean conectado;
 
-	public ConexionThread(String ip, int puerto, String usuario, Client cliente) {
+	// [ CONSTRUCTORES ]
+	public ConexionThread(String ip, int puerto, String usuario, Client cliente)
+	{
 		this.ip = ip;
 		this.puerto = puerto;
 		this.usuario = usuario;
@@ -26,8 +31,10 @@ public class ConexionThread extends Thread {
 	}
 
 	@Override
-	public void run() {
-		try {
+	public void run()
+	{
+		try
+		{
 			Mensaje mensaje;
 
 			socket = new Socket(ip, puerto);
@@ -37,77 +44,122 @@ public class ConexionThread extends Thread {
 			salida.writeObject(usuario);
 			mensaje = (Mensaje) entrada.readObject();
 
-			if ("OK".equals(mensaje.getContenido())) {
+			if ("OK".equals(mensaje.getContenido()))
+			{
 				cliente.conexionExitosa();
 
-				while (conectado) {
-					try {
+				while (conectado)
+				{
+					try
+					{
 						mensaje = (Mensaje) entrada.readObject();
 
-						if ("lista_clientes".equals(mensaje.getTipo())) {
+						if ("lista_clientes".equals(mensaje.getTipo()))
+						{
 							cliente.actualizarClientes(mensaje.getClientes());
-						} else if ("mensaje_publico".equals(mensaje.getTipo())) {
+						}
+						else if ("mensaje_publico".equals(mensaje.getTipo()))
+						{
 							cliente.mostrarMensaje("Público", mensaje.getRemitente(), mensaje.getContenido());
-						} else if ("mensaje_privado".equals(mensaje.getTipo())) {
+						}
+						else if ("mensaje_privado".equals(mensaje.getTipo()))
+						{
 							cliente.mostrarMensaje("Privado", mensaje.getRemitente(), mensaje.getContenido());
 						}
-					} catch (IOException e) {
-						if (conectado) {
+					}
+					catch (IOException e)
+					{
+						if (conectado)
+						{
 							cliente.conexionFallida("Error de conexión: " + e.getMessage());
 						}
 						break;
-					} catch (ClassNotFoundException e) {
+					}
+					catch (ClassNotFoundException e)
+					{
 						cliente.conexionFallida("Error de comunicación: " + e.getMessage());
 						break;
 					}
 				}
-			} else if ("ERROR_LLENO".equals(mensaje.getContenido())) {
+			}
+			else if ("ERROR_LLENO".equals(mensaje.getContenido()))
+			{
 				cliente.conexionFallida("Servidor lleno");
-			} else if ("ERROR_DUPLICADO".equals(mensaje.getContenido())) {
+			}
+			else if ("ERROR_DUPLICADO".equals(mensaje.getContenido()))
+			{
 				cliente.conexionFallida("Usuario ya conectado");
-			} else if ("ERROR_RESERVADO".equals(mensaje.getContenido())) {
+			}
+			else if ("ERROR_RESERVADO".equals(mensaje.getContenido()))
+			{
 				cliente.conexionFallida("Nombre de usuario inválido");
 			}
 
-		} catch (IOException | ClassNotFoundException ex) {
+		}
+		catch (IOException | ClassNotFoundException ex)
+		{
 			cliente.conexionFallida("Error de conexión: " + ex.getMessage());
-		} finally {
+		}
+		finally
+		{
 			cerrarConexion();
 		}
 	}
 
-	public void enviarMensaje(Mensaje mensaje) {
-		try {
+	public void enviarMensaje(Mensaje mensaje)
+	{
+		try
+		{
 			salida.writeObject(mensaje);
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			cliente.conexionFallida("Error enviando mensaje: " + e.getMessage());
 		}
 	}
 
-	public synchronized void desconectar() {
+	public synchronized void desconectar()
+	{
 		conectado = false;
 
-		try {
-			if (salida != null) {
+		try
+		{
+			if (salida != null)
+			{
 				salida.writeObject(new Mensaje("DESCONEXION"));
 				salida.flush();
 			}
-			if (socket != null) {
+			if (socket != null)
+			{
 				socket.close();
 			}
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
+
 		}
 	}
 
-	private void cerrarConexion() {
-		try {
+	private void cerrarConexion()
+	{
+		try
+		{
 			if (entrada != null)
+			{
 				entrada.close();
+			}
 			if (salida != null)
+			{
 				salida.close();
+			}
 			if (socket != null)
+			{
 				socket.close();
-		} catch (IOException e) {
+			}
+		}
+		catch (IOException e)
+		{
+
 		}
 	}
 }
