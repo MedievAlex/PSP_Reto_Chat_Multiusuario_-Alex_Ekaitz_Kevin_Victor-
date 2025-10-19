@@ -46,6 +46,7 @@ public class Client extends JFrame implements ActionListener
 			{
 				Client frame = new Client();
 				frame.setVisible(true);
+				frame.txtUsuario.requestFocusInWindow(); // Hacer que el campo de usuario esté seleccionado al iniciar la ventana
 			}
 			catch (Exception e)
 			{
@@ -293,6 +294,8 @@ public class Client extends JFrame implements ActionListener
 		{
 			areaChat.append("(" + tipo + ") [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))+" @" + remitente + "]: " + contenido + "\n\n");
 		}
+		
+		areaChat.setCaretPosition(areaChat.getDocument().getLength()); // Fuerza el scroll vertical para mostrar siempre el último mensaje añadido
 	}
 
 	// Desconecta el cliente

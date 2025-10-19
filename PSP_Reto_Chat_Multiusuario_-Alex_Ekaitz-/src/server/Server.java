@@ -19,7 +19,7 @@ public class Server
 
 	// [ VARIABLES ]
 	private final int PUERTO = 1234; // Puerto elegido
-	private int limite = 6; // Limite de clientes simultaneos
+	private int limite = 2; // Limite de clientes simultaneos
 	private int tiempoMostrar = 30; // Tiempo entre mensajes
 	private ClientThread hilo; // Hilo para cada cliente
 	private Map<String, ClientThread> clientes = Collections.synchronizedMap(new HashMap<>()); // Mapa sincronizado de clientes con sus hilos

@@ -44,18 +44,30 @@ public class ClientThread extends Thread
 			if (server.getClientesActivos().size() >= server.getLimite()) // Mensaje de error si el servidor esta lleno
 			{
 				salida.writeObject(new Mensaje("ERROR_LLENO"));
+
+				System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Conexión rechazada: Servidor lleno");
+				GeneraLog.getLogger().info(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Conexión rechazada: Servidor lleno");
+
 				return;
 			}
 
 			if (server.getClientesActivos().contains(usuario)) // Mensaje de error si ya hay un cliente con ese usuario
 			{
 				salida.writeObject(new Mensaje("ERROR_DUPLICADO"));
+
+				System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Conexión rechazada: Usuario duplicado");
+				GeneraLog.getLogger().info(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Conexión rechazada: Usuario duplicado");
+
 				return;
 			}
 
 			if ("Server".equalsIgnoreCase(usuario)) // Mensaje de error si es un nombre de usuario reservado EJ.: Server
 			{
 				salida.writeObject(new Mensaje("ERROR_RESERVADO"));
+
+				System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Conexión rechazada: Nombre reservado");
+				GeneraLog.getLogger().info(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Conexión rechazada: Nombre reservado");
+
 				return;
 			}
 
