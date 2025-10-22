@@ -15,3 +15,5 @@ QUEHACERES Y PREGUNTAS
 [ X ] Trabajo extra: mostrar hora de envio del mensaje (Client) Lineas: 274-298. (Alex)
 
 [ X ] Trabajo extra: Falta modificar el formato del mensaje privado que le llega al cliente. (Alex)
+
+[   ] Mirar si el cliente se desconecta se le muestra el mensaje de que se ha desconectado. (Alex)
