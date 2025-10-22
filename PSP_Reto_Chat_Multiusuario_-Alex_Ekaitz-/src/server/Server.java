@@ -112,7 +112,7 @@ public class Server
 		{
 			if (!hilo.getUsuario().equals(mensaje.getRemitente()))
 			{
-				hilo.enviarMensaje(mensaje);
+				hilo.enviarMensaje(mensaje); // Llama al metodo de ClientThread
 			}
 		}
 

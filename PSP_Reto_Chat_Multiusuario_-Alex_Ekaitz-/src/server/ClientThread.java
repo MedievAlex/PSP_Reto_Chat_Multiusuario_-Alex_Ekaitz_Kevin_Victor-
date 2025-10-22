@@ -43,7 +43,7 @@ public class ClientThread extends Thread
 
 			if (server.getClientesActivos().size() >= server.getLimite()) // Mensaje de error si el servidor esta lleno
 			{
-				salida.writeObject(new Mensaje("ERROR_LLENO"));
+				salida.writeObject(new Mensaje("ERROR_LLENO")); // Se envia el mensaje al ConexionThread
 
 				System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Conexión rechazada: Servidor lleno");
 				GeneraLog.getLogger().info(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Conexión rechazada: Servidor lleno");
@@ -53,7 +53,7 @@ public class ClientThread extends Thread
 
 			if (server.getClientesActivos().contains(usuario)) // Mensaje de error si ya hay un cliente con ese usuario
 			{
-				salida.writeObject(new Mensaje("ERROR_DUPLICADO"));
+				salida.writeObject(new Mensaje("ERROR_DUPLICADO")); // Se envia el mensaje al ConexionThread
 
 				System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Conexión rechazada: Usuario duplicado");
 				GeneraLog.getLogger().info(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Conexión rechazada: Usuario duplicado");
@@ -63,7 +63,7 @@ public class ClientThread extends Thread
 
 			if ("Server".equalsIgnoreCase(usuario)) // Mensaje de error si es un nombre de usuario reservado EJ.: Server
 			{
-				salida.writeObject(new Mensaje("ERROR_RESERVADO"));
+				salida.writeObject(new Mensaje("ERROR_RESERVADO")); // Se envia el mensaje al ConexionThread
 
 				System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Conexión rechazada: Nombre reservado");
 				GeneraLog.getLogger().info(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Conexión rechazada: Nombre reservado");
@@ -72,7 +72,7 @@ public class ClientThread extends Thread
 			}
 
 			conectado = true;
-			salida.writeObject(new Mensaje("OK"));
+			salida.writeObject(new Mensaje("OK")); // Se envia el OK al ConexionThread
 			server.conexion(usuario, this);
 
 			// Mensajes enviados
@@ -80,15 +80,15 @@ public class ClientThread extends Thread
 			{
 				if ("mensaje_publico".equals(mensaje.getTipo())) // Si el mensaje es publico
 				{
-					server.enviarMensajePublico(mensaje);
+					server.enviarMensajePublico(mensaje); // Envia el mensaje privado al Server
 					GeneraLog.getLogger().info("(Público) [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + " @" + usuario + "]: " + mensaje);
 				}
 				else if ("mensaje_privado".equals(mensaje.getTipo())) // Si el mensaje es privado
 				{
-					server.enviarMensajePrivado(mensaje);
+					server.enviarMensajePrivado(mensaje); // Envia el mensaje publico al Server
 					GeneraLog.getLogger().info("(Privado) [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + " @" + usuario + "]: " + mensaje);
 				}
-				else if ("respuesta_server".equals(mensaje.getTipo()) && "DESCONEXION".equals(mensaje.getContenido())) // Si el mensaje es de desconexion
+				else if ("respuesta_server".equals(mensaje.getTipo()) && "DESCONEXION".equals(mensaje.getContenido())) // Envia el mensaje sobre desconexsion
 				{
 					System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] El usuario " + usuario + " se desconectó.");
 					GeneraLog.getLogger().info(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] El usuario " + usuario + " se desconectó.");
@@ -120,11 +120,11 @@ public class ClientThread extends Thread
 	}
 
 	// [ METODOS ]
-	public void enviarMensaje(Mensaje mensaje)
+	public void enviarMensaje(Mensaje mensaje) // Mensaje recivido del server para enviar
 	{
 		try
 		{
-			salida.writeObject(mensaje);
+			salida.writeObject(mensaje); // Se envia el mensaje al ConexionThread
 		}
 		catch (IOException e)
 		{

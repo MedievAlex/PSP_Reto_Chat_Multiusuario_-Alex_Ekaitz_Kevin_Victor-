@@ -44,7 +44,7 @@ public class ConexionThread extends Thread
 			salida.writeObject(usuario);
 			mensaje = (Mensaje) entrada.readObject();
 
-			if ("OK".equals(mensaje.getContenido()))
+			if ("OK".equals(mensaje.getContenido())) // Si recive el OK del ClientThread
 			{
 				cliente.conexionExitosa();
 
@@ -52,19 +52,19 @@ public class ConexionThread extends Thread
 				{
 					try
 					{
-						mensaje = (Mensaje) entrada.readObject();
+						mensaje = (Mensaje) entrada.readObject(); // El mensaje recibido
 
-						if ("lista_clientes".equals(mensaje.getTipo()))
+						if ("lista_clientes".equals(mensaje.getTipo())) // Si el mensaje recibido es tipo actualizar clientes
 						{
-							cliente.actualizarClientes(mensaje.getClientes());
+							cliente.actualizarClientes(mensaje.getClientes()); // Metodo en cliente
 						}
-						else if ("mensaje_publico".equals(mensaje.getTipo()))
+						else if ("mensaje_publico".equals(mensaje.getTipo())) // Si el mensaje recibido es tipo mensaje publico
 						{
-							cliente.mostrarMensaje("Público", mensaje.getRemitente(), mensaje.getContenido());
+							cliente.mostrarMensaje("Público", mensaje.getRemitente(), mensaje.getContenido()); // Metodo en cliente
 						}
-						else if ("mensaje_privado".equals(mensaje.getTipo()))
+						else if ("mensaje_privado".equals(mensaje.getTipo())) // Si el mensaje recibido es tipo mensaje privado
 						{
-							cliente.mostrarMensaje("Privado", mensaje.getRemitente(), mensaje.getContenido());
+							cliente.mostrarMensaje("Privado", mensaje.getRemitente(), mensaje.getContenido()); // Metodo en cliente
 						}
 					}
 					catch (IOException e)
@@ -110,7 +110,7 @@ public class ConexionThread extends Thread
 	{
 		try
 		{
-			salida.writeObject(mensaje);
+			salida.writeObject(mensaje); // Envia el mensaje al ClientThread
 		}
 		catch (IOException e)
 		{

@@ -253,12 +253,12 @@ public class Client extends JFrame implements ActionListener
 
 		SwingUtilities.invokeLater(() ->
 		{
-			lblContador.setText("Conectados: " + String.valueOf(clientes.size()));
+			lblContador.setText("Conectados: " + String.valueOf(clientes.size())); // Muestra los clientes conectados
 
-			clientesFiltrados.remove(txtUsuario.getText());
+			clientesFiltrados.remove(txtUsuario.getText()); // Elimina al propio usuario para que no aparezca en el combobox
 
-			this.clientes.setModel(new DefaultComboBoxModel<String>(clientesFiltrados.toArray(new String[0])));
-			this.clientes.setSelectedIndex(-1);
+			this.clientes.setModel(new DefaultComboBoxModel<String>(clientesFiltrados.toArray(new String[0]))); // Actualiza
+			this.clientes.setSelectedIndex(-1); // Deselecciona
 		});
 	}
 
@@ -286,11 +286,11 @@ public class Client extends JFrame implements ActionListener
 	// Muestra el mensaje
 	public void mostrarMensaje(String tipo, String remitente, String contenido)
 	{
-		if(tipo.equals("Privado"))
+		if(tipo.equals("Privado")) // Si el mensaje recivido es privado
 		{
 			areaChat.append("(" + tipo + ") [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))+" De @" + remitente + "]: " + contenido + "\n\n");
 		}
-		else
+		else // Si el mensaje recivido es publico
 		{
 			areaChat.append("(" + tipo + ") [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))+" @" + remitente + "]: " + contenido + "\n\n");
 		}
