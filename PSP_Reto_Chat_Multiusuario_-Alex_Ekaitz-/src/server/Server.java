@@ -66,35 +66,37 @@ public class Server
 
 	public void conexion(String usuario, ClientThread hilo)
 	{
-		synchronized(clientes) {
-			clientes.put(usuario, hilo); // Añade un cliente con su hilo al mapa
+		synchronized(clientes) { 
+			clientes.put(usuario, hilo); // Añade un cliente con su hilo al HashMap
+
+			// Actualizar contador en el monitor
+			if (monitor != null)
+			{			
+				monitor.setClientesConectados(clientes.size());
+			}
 		}
 		System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Usuario conectado: " + usuario + " | Activos: " + clientes.size());
 		GeneraLog.getLogger().info("Usuario conectado: " + usuario + " | Activos: " + clientes.size());
-		actualizarClientes(true, usuario);
-
-		// Actualizar contador en el monitor
-		if (monitor != null)
-		{
-			monitor.setClientesConectados(clientes.size());
-		}
+		actualizarClientes(true, usuario);	
 	}
 
-	public synchronized void desconexion(String usuario)
+	public void desconexion(String usuario)
 	{
-		clientes.remove(usuario);
+		synchronized(clientes) { 
+			clientes.remove(usuario); // Elimina el cliente del HashMap
+
+			// Actualizar contador en el monitor
+			if (monitor != null)
+			{
+				monitor.setClientesConectados(clientes.size());
+			}
+		}
 		System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Usuario desconectado: " + usuario + " | Activos: " + clientes.size());
 		GeneraLog.getLogger().info("Usuario desconectado: " + usuario + " | Activos: " + clientes.size());
 		actualizarClientes(false, usuario);
-
-		// Actualizar contador en el monitor
-		if (monitor != null)
-		{
-			monitor.setClientesConectados(clientes.size());
-		}
 	}
 
-	public synchronized List<String> getClientesActivos()
+	public List<String> getClientesActivos()
 	{
 		return new ArrayList<>(clientes.keySet());
 	}
@@ -103,27 +105,27 @@ public class Server
 	{
 		List<Mensaje> lista = mensajes.getOrDefault(mensaje.getRemitente(), new ArrayList<>()); // Obtiene la lista de mensajes y si no existe la crea
 
-		lista.add(mensaje); // Añade el mensaje a la lista existente o nueva
+		lista.add(mensaje); // Añade el mensaje a la lista
 		mensajes.put(mensaje.getRemitente(), lista); // Añade o reemplaza el usuario
 
-			for (ClientThread hilo : clientes.values()) // Envia el mensaje a todos los clientes conectados menos al remitente
+		for (ClientThread hilo : clientes.values()) // Envia el mensaje a todos los clientes conectados menos al remitente
+		{
+			if (!hilo.getUsuario().equals(mensaje.getRemitente()))
 			{
-				if (!hilo.getUsuario().equals(mensaje.getRemitente()))
-				{
-					hilo.enviarMensaje(mensaje);
-				}
+				hilo.enviarMensaje(mensaje);
 			}
+		}
 
-			if (monitor != null && !"Server".equals(mensaje.getRemitente()) && !"lista_clientes".equals(mensaje.getTipo()))
-			{
-				monitor.setUltimoMensaje(mensaje);
+		if (monitor != null && !"Server".equals(mensaje.getRemitente()) && !"lista_clientes".equals(mensaje.getTipo()))
+		{
+			monitor.setUltimoMensaje(mensaje);
 
-				System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] MENSAJE: "
-							+ "(Público) [@" + mensaje.getRemitente() + "]: " + mensaje.getContenido());
+			System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] MENSAJE: "
+						+ "(Público) [@" + mensaje.getRemitente() + "]: " + mensaje.getContenido());
 
-				GeneraLog.getLogger().info(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] MENSAJE: "
-							+ "(Público) [@" + mensaje.getRemitente() + "]: " + mensaje.getContenido());
-			}
+			GeneraLog.getLogger().info(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] MENSAJE: "
+						+ "(Público) [@" + mensaje.getRemitente() + "]: " + mensaje.getContenido());
+		}
 	}
 
 	public synchronized void enviarMensajePrivado(Mensaje mensaje)
@@ -151,7 +153,7 @@ public class Server
 				+ "(Privado) [De @" + mensaje.getRemitente() + " para @" + mensaje.getDestinatario() + "]: " + mensaje.getContenido());
 	}
 
-	public synchronized void actualizarClientes(boolean conectado, String usuario)
+	public void actualizarClientes(boolean conectado, String usuario)
 	{
 		enviarMensajePublico(new Mensaje(getClientesActivos()));
 
