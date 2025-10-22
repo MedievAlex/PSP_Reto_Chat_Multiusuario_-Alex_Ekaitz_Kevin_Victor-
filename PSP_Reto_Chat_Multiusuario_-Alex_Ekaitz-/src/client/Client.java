@@ -286,11 +286,11 @@ public class Client extends JFrame implements ActionListener
 	// Muestra el mensaje
 	public void mostrarMensaje(String tipo, String remitente, String contenido)
 	{
-		if(tipo.equals("Privado")) // Si el mensaje recivido es privado
+		if(tipo.equals("Privado")) // Si el mensaje recibido es privado
 		{
 			areaChat.append("(" + tipo + ") [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))+" De @" + remitente + "]: " + contenido + "\n\n");
 		}
-		else // Si el mensaje recivido es publico
+		else // Si el mensaje recibido es publico
 		{
 			areaChat.append("(" + tipo + ") [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))+" @" + remitente + "]: " + contenido + "\n\n");
 		}
@@ -314,4 +314,5 @@ public class Client extends JFrame implements ActionListener
 		txtMensaje.setEnabled(false);
 		btnEnviar.setEnabled(false);
 	}
+
 }
