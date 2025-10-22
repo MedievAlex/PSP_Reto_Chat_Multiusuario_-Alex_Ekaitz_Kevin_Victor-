@@ -118,7 +118,7 @@ public class ConexionThread extends Thread
 		}
 	}
 
-	public synchronized void desconectar()
+	public void desconectar()
 	{
 		conectado = false;
 
