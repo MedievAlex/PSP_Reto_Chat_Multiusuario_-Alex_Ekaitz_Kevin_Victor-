@@ -56,7 +56,7 @@ public class ConexionThread extends Thread
 
 						if ("lista_clientes".equals(mensaje.getTipo())) // Si el mensaje recibido es tipo actualizar clientes
 						{
-							cliente.actualizarClientes(mensaje.getClientes()); // Metodo en cliente
+							cliente.actualizarClientes(mensaje); // Metodo en cliente
 						}
 						else if ("mensaje_publico".equals(mensaje.getTipo())) // Si el mensaje recibido es tipo mensaje publico
 						{
@@ -126,7 +126,7 @@ public class ConexionThread extends Thread
 		{
 			if (salida != null)
 			{
-				salida.writeObject(new Mensaje("DESCONEXION"));
+				enviarMensaje(new Mensaje("DESCONEXION"));
 				salida.flush();
 			}
 			if (socket != null)
@@ -159,7 +159,6 @@ public class ConexionThread extends Thread
 		}
 		catch (IOException e)
 		{
-
 		}
 	}
 }

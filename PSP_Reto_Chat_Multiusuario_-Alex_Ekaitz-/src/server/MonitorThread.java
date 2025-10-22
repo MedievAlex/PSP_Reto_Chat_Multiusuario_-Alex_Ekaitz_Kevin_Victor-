@@ -7,10 +7,10 @@ import logger.GeneraLog;
 import model.Mensaje;
 
 public class MonitorThread extends Thread {
-	private int clientesConectados;
-	private long inicioServidor;  // Te faltaba esta variable
-	private Mensaje ultimoMensaje;  // Y esta también
-	private int tiempoMostrar;
+	private int clientesConectados; // Número de clientes conectados
+	private long inicioServidor; // Momento del inicio del servidor
+	private Mensaje ultimoMensaje; // Último mensaje enviado
+	private int tiempoMostrar; // El tiempo que tarda en mostrar la información
 
 	// [ CONSTRUCTORES ]
 	public MonitorThread(int tiempoMostrar, long inicioServidor)

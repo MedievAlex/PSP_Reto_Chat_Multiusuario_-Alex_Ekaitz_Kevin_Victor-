@@ -27,11 +27,15 @@ public class Mensaje implements Serializable
     /**
      * Constructor para mensajes de lista de clientes
      * @param clientes Lista de clientes conectados
+     * @param contenido Contenido del mensaje
+     * @param remitente El remitente del mensaje
      */
-    public Mensaje(List<String> clientes)
+    public Mensaje(List<String> clientes, String contenido, String remitente)
     {
         this.tipo = "lista_clientes";
         this.clientes = clientes;
+        this.contenido = contenido;
+        this.remitente = remitente;
     }
 
     /**
