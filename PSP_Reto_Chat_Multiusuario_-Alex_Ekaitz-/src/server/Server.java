@@ -64,9 +64,11 @@ public class Server
 		}
 	}
 
-	public synchronized void conexion(String usuario, ClientThread hilo)
+	public void conexion(String usuario, ClientThread hilo)
 	{
-		clientes.put(usuario, hilo);
+		synchronized(clientes) {
+			clientes.put(usuario, hilo); // Añade un cliente con su hilo al mapa
+		}
 		System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Usuario conectado: " + usuario + " | Activos: " + clientes.size());
 		GeneraLog.getLogger().info("Usuario conectado: " + usuario + " | Activos: " + clientes.size());
 		actualizarClientes(true, usuario);
