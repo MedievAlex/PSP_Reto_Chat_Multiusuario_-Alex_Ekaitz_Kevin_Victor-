@@ -34,7 +34,7 @@ public class Client extends JFrame implements ActionListener
 	private JPanel panelInferior;
 	private JCheckBox chkPrivado;
 	private JLabel labelPara;
-	private JComboBox<String> clientes;
+	private JComboBox<String> clientesCombo;
 	private JTextField txtMensaje;
 	private JButton btnEnviar;
 
@@ -139,9 +139,9 @@ public class Client extends JFrame implements ActionListener
 		labelPara = new JLabel("Para:");
 		labelPara.setFont(new Font("Arial", Font.BOLD, 14));
 
-		clientes = new JComboBox<>();
-		clientes.setPreferredSize(new Dimension(150, 22));
-		clientes.setEnabled(false);
+		clientesCombo = new JComboBox<>();
+		clientesCombo.setPreferredSize(new Dimension(150, 22));
+		clientesCombo.setEnabled(false);
 
 		txtMensaje = new JTextField(50);
 		txtMensaje.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -154,7 +154,7 @@ public class Client extends JFrame implements ActionListener
 
 		panelInferior.add(chkPrivado);
 		panelInferior.add(labelPara);
-		panelInferior.add(clientes);
+		panelInferior.add(clientesCombo);
 		panelInferior.add(txtMensaje);
 		panelInferior.add(btnEnviar);
 
@@ -185,16 +185,16 @@ public class Client extends JFrame implements ActionListener
 		}
 		else if (e.getSource() == chkPrivado)
 		{
-			clientes.setEnabled(chkPrivado.isSelected());
+			clientesCombo.setEnabled(chkPrivado.isSelected());
 
 			if (!chkPrivado.isSelected())
 			{
-				clientes.setSelectedIndex(-1);
+				clientesCombo.setSelectedIndex(-1);
 			}
 		}
 		else if (e.getSource() == btnEnviar)
 		{
-			if (chkPrivado.isSelected() && clientes.getSelectedIndex() == -1)
+			if (chkPrivado.isSelected() && clientesCombo.getSelectedIndex() == -1)
 			{
 				JOptionPane.showMessageDialog(this, "Debe seleccionar un usuario", "Atención", JOptionPane.WARNING_MESSAGE);
 				return;
@@ -247,18 +247,20 @@ public class Client extends JFrame implements ActionListener
 	}
 
 	// Actualiza la lista de clientes conectados en el ComboBox
-	public void actualizarClientes(List<String> clientes)
+	public void actualizarClientes(Mensaje mensaje)
 	{
-		List<String> clientesFiltrados = new ArrayList<>(clientes);
+		List<String> clientes = new ArrayList<>(mensaje.getClientes());
 
 		SwingUtilities.invokeLater(() ->
 		{
-			lblContador.setText("Conectados: " + String.valueOf(clientes.size())); // Muestra los clientes conectados
+			lblContador.setText("Conectados: " + String.valueOf(clientes.size())); // Muestra el número de clientes conectados
 
-			clientesFiltrados.remove(txtUsuario.getText()); // Elimina al propio usuario para que no aparezca en el combobox
+			clientes.remove(txtUsuario.getText()); // Elimina al propio usuario para que no aparezca en el combobox
 
-			this.clientes.setModel(new DefaultComboBoxModel<String>(clientesFiltrados.toArray(new String[0]))); // Actualiza
-			this.clientes.setSelectedIndex(-1); // Deselecciona
+			this.clientesCombo.setModel(new DefaultComboBoxModel<String>(clientes.toArray(new String[0]))); // Actualiza
+			this.clientesCombo.setSelectedIndex(-1); // Deselecciona
+			
+			mostrarMensaje("Público", mensaje.getRemitente(), mensaje.getContenido());
 		});
 	}
 
@@ -269,10 +271,10 @@ public class Client extends JFrame implements ActionListener
 
 		if (chkPrivado.isSelected()) // Si el mensaje es privado
 		{
-			mensaje = new Mensaje(txtMensaje.getText(), txtUsuario.getText(), String.valueOf(clientes.getSelectedItem()));
+			mensaje = new Mensaje(txtMensaje.getText(), txtUsuario.getText(), String.valueOf(clientesCombo.getSelectedItem()));
 			mostrarMensaje("Privado", "Yo para @" + mensaje.getDestinatario(), txtMensaje.getText());
 		}
-		else // Si es publico
+		else // Si es público
 		{
 			mensaje = new Mensaje(txtMensaje.getText(), txtUsuario.getText());
 			mostrarMensaje("Público", "Yo", txtMensaje.getText());
@@ -290,7 +292,7 @@ public class Client extends JFrame implements ActionListener
 		{
 			areaChat.append("(" + tipo + ") [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))+" De @" + remitente + "]: " + contenido + "\n\n");
 		}
-		else // Si el mensaje recibido es publico
+		else // Si el mensaje recibido es público
 		{
 			areaChat.append("(" + tipo + ") [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))+" @" + remitente + "]: " + contenido + "\n\n");
 		}
@@ -310,7 +312,7 @@ public class Client extends JFrame implements ActionListener
 		lblEstado.setText("No conectado");
 		lblContador.setText("");
 		chkPrivado.setEnabled(false);
-		this.clientes.removeAllItems();
+		this.clientesCombo.removeAllItems();
 		txtMensaje.setEnabled(false);
 		btnEnviar.setEnabled(false);
 	}
