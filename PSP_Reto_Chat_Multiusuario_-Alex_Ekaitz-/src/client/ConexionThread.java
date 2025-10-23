@@ -52,7 +52,7 @@ public class ConexionThread extends Thread
 				{
 					try
 					{
-						mensaje = (Mensaje) entrada.readObject(); // El mensaje recibido
+						mensaje = (Mensaje) entrada.readObject(); // El mensaje recibido del servidor
 
 						if ("lista_clientes".equals(mensaje.getTipo())) // Si el mensaje recibido es tipo actualizar clientes
 						{
