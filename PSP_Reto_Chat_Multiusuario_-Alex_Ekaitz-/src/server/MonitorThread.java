@@ -8,18 +8,17 @@ import model.ListaClientes;
 import model.Mensaje;
 
 public class MonitorThread extends Thread {
-	private int clientesConectados; // Número de clientes conectados
 	private long inicioServidor; // Momento del inicio del servidor
 	private Mensaje ultimoMensaje; // Último mensaje enviado
 	private ListaClientes listaClientes;
 	private int tiempoMostrar; // El tiempo que tarda en mostrar la información
 
 	// [ CONSTRUCTORES ]
-	public MonitorThread(int tiempoMostrar, long inicioServidor)
+	public MonitorThread(int tiempoMostrar, long inicioServidor, ListaClientes listaClientes)
 	{
 		this.tiempoMostrar = tiempoMostrar;
 		this.inicioServidor = inicioServidor;
-		this.clientesConectados = 0;
+		this.listaClientes = listaClientes;
 	}
 
 	// [ METODOS ]

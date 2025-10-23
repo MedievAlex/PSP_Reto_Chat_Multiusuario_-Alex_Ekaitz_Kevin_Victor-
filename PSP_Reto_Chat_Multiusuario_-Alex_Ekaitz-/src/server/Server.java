@@ -44,8 +44,10 @@ public class Server
 			inicioServidor = System.currentTimeMillis(); // Registra el momento de inicio del servidor
 			System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Servidor iniciado. Esperando conexiones en el puerto " + PUERTO + "...");
 
+			listaClientes = new ListaClientes();
+			
 			// Crear e iniciar el hilo de monitoreo
-			monitor = new MonitorThread(tiempoMostrar, inicioServidor);
+			monitor = new MonitorThread(tiempoMostrar, inicioServidor, listaClientes);
 			monitor.start();
 
 			// Mantiene el servidor abierto

@@ -7,8 +7,14 @@ import java.util.Map;
 import server.ClientThread;
 
 public class ListaClientes {
-	private Map<String, ClientThread> clientes = Collections.synchronizedMap(new HashMap<>()); // Mapa sincronizado de clientes con sus hilos
+	private Map<String, ClientThread> clientes; // Mapa sincronizado de clientes con sus hilos
 	private int clientesActivos;
+	
+	// Constructor
+	public ListaClientes()
+	{
+		this.clientes = Collections.synchronizedMap(new HashMap<>());
+	}
 	
 	// Devuelve la cantidad de clientes activos
 	public int clientesActivos()
