@@ -1,7 +1,9 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import server.ClientThread;
@@ -46,5 +48,11 @@ public class ListaClientes {
 	public Map<String, ClientThread> obtenerClientes() 
 	{
 		return clientes;
+	}
+	
+	// Para actualizar lista (PREGUNTAR)
+	public List<String> listaClientesActivos()
+	{
+		return new ArrayList<>(clientes.keySet());
 	}
 }

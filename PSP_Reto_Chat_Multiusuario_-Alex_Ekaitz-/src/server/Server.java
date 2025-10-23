@@ -170,6 +170,7 @@ public class Server
 	public void actualizarClientes(boolean conectado, String usuario)
 	{
 		enviarMensajePublico(new Mensaje(getClientesActivos(), "Cliente " + usuario + (conectado ? " conectado." : " desconectado."), "Server"));
+		//enviarMensajePublico(new Mensaje(listaClientes.listaClientesActivos(), "Cliente " + usuario + (conectado ? " conectado." : " desconectado."), "Server"));
 	}
 
 	// [ GETTERS NECESARIOS ]
