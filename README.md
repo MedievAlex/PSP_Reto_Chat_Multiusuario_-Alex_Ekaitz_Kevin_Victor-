@@ -1,5 +1,7 @@
 QUEHACERES Y PREGUNTAS
 
+[  ] IMPORTANTE: Estoy probando a mover a una clase externa lo de la lista de clientes en una rama nueva (MoviendoAOtraClase). (Alex)
+
 [ X ] IMPORTANTE: Revisa la rama para hacer merge con el main. (Ekaitz)
 
 [ X ] Falta preguntar si en el punto de "Mantener la lista de usuarios conectados y los mensajes enviados" a parte de tener una lista con los usuarios conectados hace falta guardar los mensajes enviados de cada usuario.
@@ -17,3 +19,4 @@ QUEHACERES Y PREGUNTAS
 [ X ] Trabajo extra: Falta modificar el formato del mensaje privado que le llega al cliente. (Alex)
 
 [   ] Mirar si el cliente se desconecta se le muestra el mensaje de que se ha desconectado. (Alex)
+
