@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import logger.GeneraLog;
+import model.ListaClientes;
 import model.Mensaje;
 
 public class Server
@@ -21,7 +22,8 @@ public class Server
 	private int limite = 2; // Limite de clientes simultaneos
 	private int tiempoMostrar = 30; // Tiempo entre mensajes
 	private ClientThread hilo; // Hilo para cada cliente
-	private Map<String, ClientThread> clientes = Collections.synchronizedMap(new HashMap<>()); // Mapa sincronizado de clientes con sus hilos
+	//private Map<String, ClientThread> clientes = Collections.synchronizedMap(new HashMap<>()); // Mapa sincronizado de clientes con sus hilos
+	private ListaClientes listaClientes;
 	private Map<String, List<Mensaje>> mensajes = Collections.synchronizedMap(new HashMap<>()); // Mapa sincronizado de clientes con sus mensajes
 	private long inicioServidor; // Momento de inicio
 	private MonitorThread monitor; // Hilo de monitoreo
@@ -65,8 +67,10 @@ public class Server
 
 	public void conexion(String usuario, ClientThread hilo)
 	{
+		listaClientes.nuevoCliente(usuario, hilo);
+		/* 
 		int clientesActivos;
-		
+				
 		synchronized(clientes)
 		{
 			clientes.put(usuario, hilo); // Añade un cliente con su hilo al HashMap
@@ -78,14 +82,16 @@ public class Server
 				monitor.setClientesConectados(clientes.size());
 			}
 		}
-		
-		System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Usuario conectado: " + usuario + " | Activos: " + clientesActivos);
-		GeneraLog.getLogger().info("Usuario conectado: " + usuario + " | Activos: " + clientesActivos);
+		*/
+		System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Usuario conectado: " + usuario + " | Activos: " + listaClientes.clientesActivos());
+		GeneraLog.getLogger().info("Usuario conectado: " + usuario + " | Activos: " + listaClientes.clientesActivos());
 		actualizarClientes(true, usuario);	
 	}
 
 	public void desconexion(String usuario)
 	{
+		listaClientes.retirarCliente(usuario);
+		/*
 		int clientesActivos;
 
 		synchronized(clientes)
@@ -99,9 +105,9 @@ public class Server
 				monitor.setClientesConectados(clientes.size());
 			}
 		}
-
-		System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Usuario desconectado: " + usuario + " | Activos: " + clientesActivos);
-		GeneraLog.getLogger().info("Usuario desconectado: " + usuario + " | Activos: " + clientesActivos);
+		*/
+		System.out.println(" [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] Usuario desconectado: " + usuario + " | Activos: " + listaClientes.clientesActivos());
+		GeneraLog.getLogger().info("Usuario desconectado: " + usuario + " | Activos: " + listaClientes.clientesActivos());
 		actualizarClientes(false, usuario);
 	}
 
@@ -113,14 +119,11 @@ public class Server
 		lista.add(mensaje); // Añade el mensaje a la lista
 		mensajes.put(mensaje.getRemitente(), lista); // Añade o reemplaza el usuario
 
-		// Necesita sincronizacion porque aunque el hashmap este sincronizado las iteraciones no son thread-safe
-		synchronized (clientes) {
-			for (ClientThread hilo : clientes.values()) // Envia el mensaje a todos los clientes conectados menos al remitente
+		for (ClientThread hilo : listaClientes.obtenerClientes().values()) // Envia el mensaje a todos los clientes conectados menos al remitente
+		{
+			if (!hilo.getUsuario().equals(mensaje.getRemitente()))
 			{
-				if (!hilo.getUsuario().equals(mensaje.getRemitente()))
-				{
-					hilo.enviarMensaje(mensaje); // Llama al metodo de ClientThread
-				}
+				hilo.enviarMensaje(mensaje); // Llama al metodo de ClientThread
 			}
 		}
 
@@ -139,7 +142,7 @@ public class Server
 	// No se necesita sincronizacion porque el hashmap ya esta sincronizado y cada hilo trabaja sobre la clave de su remitente unico
 	public void enviarMensajePrivado(Mensaje mensaje)
 	{
-		ClientThread destinatario = clientes.get(mensaje.getDestinatario());
+		ClientThread destinatario = listaClientes.obtenerCliente(mensaje.getDestinatario());
 		List<Mensaje> lista = mensajes.getOrDefault(mensaje.getRemitente(), new ArrayList<>()); // Obtiene la lista de mensajes del remitente y si no existe la crea
 
 		lista.add(mensaje); // Añade el mensaje a la lista existente o nueva
@@ -170,7 +173,7 @@ public class Server
 	// [ GETTERS NECESARIOS ]
 	public List<String> getClientesActivos()
 	{
-		return new ArrayList<>(clientes.keySet());
+		return new ArrayList<>(listaClientes.obtenerClientes().keySet()); // PREGUNTAR
 	}
 	
 	public int getLimite()

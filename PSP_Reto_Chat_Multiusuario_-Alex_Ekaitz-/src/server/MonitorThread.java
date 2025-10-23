@@ -4,12 +4,14 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import logger.GeneraLog;
+import model.ListaClientes;
 import model.Mensaje;
 
 public class MonitorThread extends Thread {
 	private int clientesConectados; // Número de clientes conectados
 	private long inicioServidor; // Momento del inicio del servidor
 	private Mensaje ultimoMensaje; // Último mensaje enviado
+	private ListaClientes listaClientes;
 	private int tiempoMostrar; // El tiempo que tarda en mostrar la información
 
 	// [ CONSTRUCTORES ]
@@ -41,7 +43,7 @@ public class MonitorThread extends Thread {
 	public void actividadServer() // Mensaje de informacion sobre el estado del servidor
 	{
 		long tiempoActivo = System.currentTimeMillis() - inicioServidor;
-		String log = " [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] ESTADO DEL SERVIDOR:\n Clientes conectados: " + clientesConectados
+		String log = " [" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] ESTADO DEL SERVIDOR:\n Clientes conectados: " + listaClientes.clientesActivos()
 					+ " | Tiempo activo: " + (tiempoActivo / 1000) + "s"
 					+ " | Último mensaje: " + (ultimoMensaje != null ? "(" + ("mensaje_publico".equals(ultimoMensaje.getTipo()) ? "Público" : "Privado") + ") "
 					+ "[" + ultimoMensaje.getRemitente() + "]: " + ultimoMensaje.getContenido() : "Ninguno");
@@ -52,10 +54,6 @@ public class MonitorThread extends Thread {
 	}
 
 	// [ GETTER Y SETTER NECESARIOS ]
-	public void setClientesConectados(int clientesConectados) {
-		this.clientesConectados = clientesConectados;
-	}
-
 	public void setUltimoMensaje(Mensaje mensaje) {
 		this.ultimoMensaje = mensaje;
 	}
