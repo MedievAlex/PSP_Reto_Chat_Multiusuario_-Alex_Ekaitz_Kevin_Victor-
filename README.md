@@ -1,6 +1,8 @@
 QUEHACERES Y PREGUNTAS
 
 [  ] IMPORTANTE: Estoy probando a mover a una clase externa lo de la lista de clientes en una rama nueva (MoviendoAOtraClase). (Alex)
+- [  ] Preguntar sobre linea 124 de Server: si es correcto hacer get del HashMap entero.
+- [  ] Preguntar sobre linea 179 de Server: si es correcto obtener el HashMap entero o si es mejor pasar directamente un ArrayList desde la clase.
 
 [ X ] IMPORTANTE: Revisa la rama para hacer merge con el main. (Ekaitz)
 
